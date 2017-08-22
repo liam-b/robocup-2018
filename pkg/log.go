@@ -18,8 +18,8 @@ const WHITE = ""
 
 var counter int = 0
 
-func printLog(difference string, color string, name string, symbol string, method []string, text string) {
-  fmt.Println(BLACK + difference + " " + pad(strconv.Itoa(counter), 3) + END + " " + BOLD + color + symbol + " " + strings.ToUpper(name) + END + " " + PURPLE + strings.Join(method, ":") + END + " " + text)
+func printLog(flag string, difference string, color string, name string, symbol string, method []string, text string) {
+  fmt.Println(BLACK + difference + " " + pad(strconv.Itoa(counter), 3) + " (" + flag + ")" + END + " " + BOLD + color + symbol + " " + strings.ToUpper(name) + END + " " + PURPLE + strings.Join(method, ":") + END + " " + text)
   counter += 1
 }
 
@@ -31,56 +31,60 @@ func pad(str string, plength int) string {
 }
 
 type Logger struct {
+  flag string
   methodString []string
   startTime time.Time
 }
 
 func (logger *Logger) init() {
   logger.startTime = time.Now()
-  fmt.Println(BOLD + "TRACE " + GREEN + "DEBUG " + BLUE + "INFO " + CYAN + "NOTICE " + GREEN + "SUCCESS " + YELLOW + "YELLOW " + RED + "ERROR " + "FATAL " + END + PURPLE + "method " + BLACK + "timestamp")
+  fmt.Println(BOLD + "TRACE " + GREEN + "DEBUG " + BLUE + "INFO " + CYAN + "NOTICE " + /*GREEN + "SUCCESS " + */YELLOW + "WARN " + RED + "ERROR " + "FATAL " + END + PURPLE + "method " + BLACK + "timestamp")
 }
 
 func (logger *Logger) timeDifference() string {
   return strconv.Itoa(int(time.Since(logger.startTime).Minutes())) + ":" + strconv.Itoa(int(time.Since(logger.startTime).Seconds()))
 }
 
-func (logger *Logger) add(method string) {
+func (logger *Logger) inc(method string) {
   logger.methodString = append(logger.methodString, method)
 }
 
-func (logger *Logger) remove() {
+func (logger *Logger) dec() {
   logger.methodString = logger.methodString[:len(logger.methodString) - 1]
 }
 
+func (logger *Logger) set(methods []string) {
+  logger.methodString = methods
+}
+
 func (logger Logger) trace(text string) {
-  printLog(logger.timeDifference(), WHITE, "trace", "-", logger.methodString, text)
+  printLog(logger.flag, logger.timeDifference(), WHITE, "trace", "-", logger.methodString, text)
 }
 
 func (logger Logger) debug(text string) {
-  printLog(logger.timeDifference(), GREEN, "debug", "➤", logger.methodString, text)
+  printLog(logger.flag, logger.timeDifference(), GREEN, "debug", "➤", logger.methodString, text)
 }
 
 func (logger Logger) info(text string) {
-  printLog(logger.timeDifference(), BLUE, "info", "ℹ", logger.methodString, text)
+  printLog(logger.flag, logger.timeDifference(), BLUE, "info", "ℹ", logger.methodString, text)
 }
 
-func (logger Logger) success(text string) {
-  printLog(logger.timeDifference(), GREEN, "success", "✓", logger.methodString, text)
-}
+// func (logger Logger) success(text string) {
+//   printLog(logger.flag, logger.timeDifference(), GREEN, "success", "✓", logger.methodString, text)
+// }
 
 func (logger Logger) notice(text string) {
-  printLog(logger.timeDifference(), CYAN, "notice", "!", logger.methodString, text)
+  printLog(logger.flag, logger.timeDifference(), CYAN, "notice", "!", logger.methodString, text)
 }
 
 func (logger Logger) warn(text string) {
-  printLog(logger.timeDifference(), YELLOW, "warn", "⚠", logger.methodString, text)
+  printLog(logger.flag, logger.timeDifference(), YELLOW, "warn", "⚠", logger.methodString, text)
 }
 
 func (logger Logger) error(text string) {
-  printLog(logger.timeDifference(), RED, "error", "×", logger.methodString, text)
+  printLog(logger.flag, logger.timeDifference(), RED, "error", "×", logger.methodString, text)
 }
 
 func (logger Logger) fatal(text string) {
-  printLog(logger.timeDifference(), RED, "fatal", "☢", logger.methodString, text)
+  printLog(logger.flag, logger.timeDifference(), RED, "fatal", "☢", logger.methodString, text)
 }
-

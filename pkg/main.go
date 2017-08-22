@@ -16,20 +16,21 @@ func main() {
 
   // fmt.Println(time.Minute(time.Now()))
 
-  log := Logger{}
+  log := Logger{flag:"test"}
   log.init()
 
-  log.add("main")
+  log.inc("main")
 
   log.trace("trace")
   log.debug("debug")
-  log.add("test")
+  log.inc("test")
   log.info("info")
   log.notice("notice")
-  log.success("success")
-  log.remove()
+  // log.success("success")
+  log.dec()
   log.warn("warn")
   // time.Sleep(1 * time.Second)
   log.error("error")
+  log.set([]string{"test", "hey"})
   log.fatal("fatal")
 }
