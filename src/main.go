@@ -1,14 +1,17 @@
 package main
 
-// import "fmt"
 import "time"
 
 var log Logger = Logger{flag: "test", level: 7}
+// var bot = map[string]interface{}{
+//   "battery": "apple",
+//   "b": 2,
+// }
 
 func main() {
-  log.init()
-  log.inc("start")
-  log.trace("logger ready")
+  log.init("start")
+  log.info("program started")
+
   // dev := ColorSensor{port: IN_2}
   // dev.init()
 
@@ -16,14 +19,17 @@ func main() {
   // dev.mode("COL-REFLECT")
   // fmt.Println(dev.intensity())
 
-  dev := Speaker{}
-  dev.init()
+  battery := Battery{}.init()
 
-  dev.play(300, 200, 20)
+  log.info("voltage " + log.number(battery.voltage()))
+
+  // speaker := Speaker{}.init()
+
+  // speaker.song([]int{300, 100, 400, 100, 500, 100, 600, 100}, 1)
 
   log.trace("starting loop")
-  log.dec()
-  log.inc("loop")
+  log.info("looping")
+  log.rep("loop")
   loop()
 }
 

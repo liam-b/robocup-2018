@@ -37,9 +37,13 @@ type Logger struct {
   startTime time.Time
 }
 
-func (logger *Logger) init() {
+func (logger *Logger) init(initialMethod string) {
   logger.startTime = time.Now()
   fmt.Println(BOLD + "TRACE " + GREEN + "DEBUG " + BLUE + "INFO " + CYAN + "NOTICE " + /*GREEN + "SUCCESS " + */YELLOW + "WARN " + RED + "ERROR " + "FATAL " + END + PURPLE + "method " + BLACK + "timestamp" + END)
+  if initialMethod != "" {
+    logger.inc(initialMethod)
+  }
+  logger.trace("logger started")
 }
 
 func (logger *Logger) timeDifference() string {
@@ -52,6 +56,11 @@ func (logger *Logger) inc(method string) {
 
 func (logger *Logger) dec() {
   logger.methodString = logger.methodString[:len(logger.methodString) - 1]
+}
+
+func (logger *Logger) rep(method string) {
+  logger.dec()
+  logger.inc(method)
 }
 
 func (logger *Logger) set(methods []string) {
@@ -88,4 +97,8 @@ func (logger Logger) error(text string) {
 
 func (logger Logger) fatal(text string) {
   if logger.level > 0 { printLog(logger.flag, logger.timeDifference(), RED, "fatal", "☢", logger.methodString, text) }
+}
+
+func (logger Logger) number(text string) string {
+  return CYAN + text + END
 }
