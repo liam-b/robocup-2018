@@ -1,3 +1,4 @@
+# set -e
 echo "clearing package folder"
 rm pkg/*.go
 echo "packing files"
