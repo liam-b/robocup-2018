@@ -25,15 +25,16 @@ func (speaker Speaker) volume(volume int) {
   speaker.device.set("volume", strconv.Itoa(volume))
 }
 
-func (speaker Speaker) song(song []int, volume int) {
+func (speaker Speaker) song(song []int, delay int, volume int) {
   if volume != 0 {
     speaker.device.set("volume", strconv.Itoa(volume))
   }
 
-  for note := 0; note < len(song); note += 2 {
-    speaker.device.set("tone", strconv.Itoa(song[note]) + " " + strconv.Itoa(song[note + 1]))
-    time.Sleep(time.Nanosecond * time.Duration(song[note + 1] * 1000000))
+  for note := 0; note < len(song); note ++ {
+    speaker.device.set("tone", strconv.Itoa(song[note]))
+    time.Sleep(time.Millisecond * time.Duration(delay))
   }
+  speaker.device.set("tone", "0")
 }
 
 func (speaker Speaker) beep(volume int) {
