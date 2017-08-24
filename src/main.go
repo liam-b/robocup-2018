@@ -3,29 +3,20 @@ package main
 import "time"
 
 var log Logger = Logger{flag: "test", level: 7}
-// var bot = map[string]interface{}{
-//   "battery": "apple",
-//   "b": 2,
-// }
+var bot Bot = Bot{
+  battery: Battery{}.init(),
+  colorSensor: ColorSensor{port: IN_2}.init(),
+}
 
 func main() {
   log.init("start")
   log.info("program started")
 
-  // dev := ColorSensor{port: IN_2}
-  // dev.init()
+  log.info("voltage is at" + log.number(bot.battery.voltage()))
 
-  // fmt.Println(dev.get("name"))
-  // dev.mode("COL-REFLECT")
-  // fmt.Println(dev.intensity())
+  speaker := Speaker{}.init()
 
-  battery := Battery{}.init()
-
-  log.info("voltage " + log.number(battery.voltage()))
-
-  // speaker := Speaker{}.init()
-
-  // speaker.song([]int{300, 100, 400, 100, 500, 100, 600, 100}, 1)
+  speaker.song([]int{300, 100, 400, 100, 500, 100, 600, 100}, 1)
 
   log.trace("starting loop")
   log.info("looping")

@@ -18,3 +18,8 @@ func (battery Battery) voltage() string {
   // voltage = voltage[0:len(voltage) - 6]
   return string(voltage[0]) + "." + string(voltage[1])
 }
+
+// func (battery Battery) voltageNumber() int {
+//   voltage := battery.device.get("voltage_now")
+//   return int(voltage[0:1])
+// }
