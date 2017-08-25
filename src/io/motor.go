@@ -10,7 +10,7 @@ type Motor struct {
   indexedDevice IndexedDevice
 }
 
-func (motor Motor) init() Motor {
+func (motor Motor) new() Motor {
   motor.path = MOTOR_PATH
   motor.indexedDevice = IndexedDevice{path: motor.path, port: motor.port}
   motor.indexedDevice.findDeviceFromPort()
@@ -64,10 +64,10 @@ type DriveMotors struct {
   motorRight Motor
 }
 
-func (driveMotors DriveMotors) init() DriveMotors {
-  driveMotors.motorLeft = Motor{port: driveMotors.portLeft}.init()
+func (driveMotors DriveMotors) new() DriveMotors {
+  driveMotors.motorLeft = Motor{port: driveMotors.portLeft}.new()
 
-  driveMotors.motorRight = Motor{port: driveMotors.portRight}.init()
+  driveMotors.motorRight = Motor{port: driveMotors.portRight}.new()
   return driveMotors
 }
 

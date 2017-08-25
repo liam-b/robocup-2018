@@ -15,6 +15,10 @@ func (device Device) set(attribute string, data string) {
   write(device.path + attribute, data)
 }
 
+func (device Device) bytes(file string) []byte {
+  return readBytes(device.path + file)
+}
+
 type IndexedDevice struct {
   port string
   path string

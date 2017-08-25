@@ -7,8 +7,8 @@ type Battery struct {
   device Device
 }
 
-func (battery Battery) init() Battery {
-  battery.path = "/sys/class/power_supply/legoev3-battery/"
+func (battery Battery) new() Battery {
+  battery.path = BATTERY_PATH
   battery.device = Device{path: battery.path}
   return battery
 }

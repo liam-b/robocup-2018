@@ -8,8 +8,8 @@ type Speaker struct {
   device Device
 }
 
-func (speaker Speaker) init() Speaker {
-  speaker.path = "/sys/devices/platform/snd-legoev3/"
+func (speaker Speaker) new() Speaker {
+  speaker.path = SOUND_PATH
   speaker.device = Device{path: speaker.path}
   return speaker
 }

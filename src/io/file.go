@@ -12,8 +12,10 @@ const OUT_B = "outB"
 const OUT_C = "outC"
 const OUT_D = "outD"
 
-const MOTOR_PATH = "/Users/liam/src/robocup/2018/mock"
-const SENSOR_PATH = "/Users/liam/src/robocup/2018/mock"
+var MOTOR_PATH string = "/sys/class/tacho-motor/"
+var SENSOR_PATH string = "/sys/class/lego-sensor/"
+var BATTERY_PATH string = "/sys/class/power_supply/legoev3-battery/"
+var SOUND_PATH string = "/sys/devices/platform/snd-legoev3/"
 
 func check(e error) {
   if e != nil {
@@ -25,6 +27,12 @@ func read(path string) string {
   dat, err := ioutil.ReadFile(path)
   check(err)
   return string(dat)
+}
+
+func readBytes(path string) []byte {
+  dat, err := ioutil.ReadFile(path)
+  check(err)
+  return dat
 }
 
 func write(path string, data string) {

@@ -9,7 +9,7 @@ type Sensor struct {
   indexedDevice IndexedDevice
 }
 
-func (sensor Sensor) init() Sensor {
+func (sensor Sensor) new() Sensor {
   sensor.path = SENSOR_PATH
   sensor.indexedDevice = IndexedDevice{path: sensor.path, port: sensor.port}
   sensor.indexedDevice.findDeviceFromPort()
@@ -31,9 +31,9 @@ type ColorSensor struct {
   sensor Sensor
 }
 
-func (colorSensor ColorSensor) init() ColorSensor {
+func (colorSensor ColorSensor) new() ColorSensor {
   colorSensor.sensor = Sensor{port: colorSensor.port}
-  colorSensor.sensor.init()
+  colorSensor.sensor.new()
   return colorSensor
 }
 

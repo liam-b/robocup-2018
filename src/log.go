@@ -19,7 +19,7 @@ const WHITE = ""
 var counter int
 
 func printLog(flag string, difference string, color string, name string, symbol string, method []string, text string) {
-  fmt.Println(BLACK + difference + " " + pad(strconv.Itoa(counter), 4) + " " + "(" + flag + ")" + END + " " + BOLD + color + symbol + " " + strings.ToUpper(name) + END + " " + PURPLE + strings.Join(method, ":") + END + " " + text)
+  fmt.Println(BLACK + difference + " " + pad(strconv.Itoa(counter), 4) + " " + "(" + flag + ")" + END + " " + BOLD + color + symbol + " " + strings.ToUpper(name) + END + " " + PURPLE + strings.Join(method, "") + END + " " + text)
   counter += 1
 }
 
@@ -37,13 +37,14 @@ type Logger struct {
   startTime time.Time
 }
 
-func (logger *Logger) init(initialMethod string) {
+func (logger Logger) new(initialMethod string) Logger {
   logger.startTime = time.Now()
   fmt.Println(BOLD + "TRACE " + GREEN + "DEBUG " + BLUE + "INFO " + CYAN + "NOTICE " + /*GREEN + "SUCCESS " + */YELLOW + "WARN " + RED + "ERROR " + "FATAL " + END + PURPLE + "method " + BLACK + "timestamp" + END)
   if initialMethod != "" {
     logger.inc(initialMethod)
   }
   logger.trace("logger started")
+  return logger
 }
 
 func (logger *Logger) timeDifference() string {
@@ -84,7 +85,11 @@ func (logger Logger) info(text string) {
 // }
 
 func (logger Logger) notice(text string) {
-  if logger.level > 3 { printLog(logger.flag, logger.timeDifference(), CYAN, "notice", "!", logger.methodString, text) }
+  if logger.level > 3 {
+    fmt.Println(CYAN + "                ________")
+    printLog(logger.flag, logger.timeDifference(), CYAN, "notice", "!", logger.methodString, text)
+    fmt.Println(CYAN + "                ‾‾‾‾‾‾‾‾")
+  }
 }
 
 func (logger Logger) warn(text string) {
