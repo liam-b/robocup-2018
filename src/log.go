@@ -64,8 +64,8 @@ func (logger *Logger) rep(method string) {
   logger.inc(method)
 }
 
-func (logger *Logger) set(methods []string) {
-  logger.methodString = methods
+func (logger *Logger) set(methods string) {
+  logger.methodString = strings.Split(methods, ":")
 }
 
 func (logger Logger) trace(text string) {

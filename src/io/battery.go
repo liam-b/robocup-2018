@@ -22,7 +22,8 @@ func (battery Battery) voltageString() string {
 func (battery Battery) voltage() int {
   voltage := battery.device.get("voltage_now")
   output := string(voltage[0]) + string(voltage[1])
-  return strconv.Atoi(output)
+  value, _ := strconv.Atoi(output)
+  return value
 }
 
 // func (battery Battery) voltageNumber() int {

@@ -44,7 +44,7 @@ func main() {
 }
 
 func loop() {
-  time.Sleep(time.Second / 20)
+  time.Sleep(time.Second / 10)
   log.trace("looping")
   loop()
 }
@@ -59,7 +59,7 @@ func setupInterrupt() {
 }
 
 func end(catch string) {
-  log.set([]string{"end"})
+  log.set("end")
 
   go bot.speaker.song([]int{600, 500, 400, 300}, 100, 1)
   log.notice("caught " + catch)
