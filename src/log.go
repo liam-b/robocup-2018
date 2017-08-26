@@ -86,9 +86,9 @@ func (logger Logger) info(text string) {
 
 func (logger Logger) notice(text string) {
   if logger.level > 3 {
-    fmt.Println(CYAN + "                ________")
+    fmt.Println(CYAN + "                ________" + END)
     printLog(logger.flag, logger.timeDifference(), CYAN, "notice", "!", logger.methodString, text)
-    fmt.Println(CYAN + "                ‾‾‾‾‾‾‾‾")
+    fmt.Println(CYAN + "                ‾‾‾‾‾‾‾‾" + END)
   }
 }
 
@@ -101,9 +101,11 @@ func (logger Logger) error(text string) {
 }
 
 func (logger Logger) fatal(text string) {
+  fmt.Println(RED + "                ‾‾‾‾‾‾‾‾" + END)
   if logger.level > 0 { printLog(logger.flag, logger.timeDifference(), RED, "fatal", "☢", logger.methodString, text) }
+  fmt.Println(RED + "                ‾‾‾‾‾‾‾‾" + END)
 }
 
-func (logger Logger) number(text string) string {
+func (logger Logger) value(text string) string {
   return CYAN + text + END
 }

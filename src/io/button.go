@@ -1,21 +1,40 @@
 package main
 
+import "os"
+// import "fmt"
 // import "strconv"
+// import "reflect"
 
-// type Button struct {
-//   path string
-//   device Device
-// }
-//
-// func (speaker Speaker) new() Speaker {
-//   speaker.path = "/sys/devices/platform/snd-legoev3/"
-//   speaker.device = Device{path: speaker.path}
-//   return speaker
-// }
-//
-// func (speaker Speaker) play(tone int, time int, volume int) {
-//   if volume != 0 {
-//     speaker.device.set("volume", strconv.Itoa(volume))
-//   }
-//   speaker.device.set("tone", strconv.Itoa(tone) + " " + strconv.Itoa(time))
-// }
+const PRESSED = 1
+const RELEASED = 0
+
+const KEY_UP = 103
+const KEY_DOWN = 108
+const KEY_LEFT = 105
+const KEY_RIGHT = 106
+
+const KEY_ENTER = 28
+const KEY_ESCAPE = 14
+
+type Button struct {
+  onKeypress func (key int, state int)
+  file *os.File
+}
+
+func (button Button) new() Button {
+  f, err := os.Open("/dev/input/by-path/platform-gpio-keys.0-event")
+  check(err)
+
+  button.file = f
+  go button.loopKeypressRead()
+  return button
+}
+
+func (button Button) loopKeypressRead() {
+  bytes := make([]byte, 32)
+  button.file.Read(bytes)
+  button.onKeypress(int(bytes[10]), int(bytes[12]))
+  // fmt.Println(strconv.Itoa(int(bytes[10])) + " : " + strconv.Itoa(int(bytes[12])))
+  // fmt.Println(reflect.TypeOf(int(bytes[12])))
+  button.loopKeypressRead()
+}

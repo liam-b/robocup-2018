@@ -1,49 +1,46 @@
 package main
 
 import "time"
-import "os"
 import "os/signal"
-import "fmt"
+import "os"
+// import "fmt"
+// import "strconv"
 
 var log Logger = Logger{flag: "test", level: 7}.new("start")
 var bot Bot
 
 func main() {
-  log.info("program started")
+  log.notice("program started")
 
   log.info("setting up io")
   bot = Bot{
     battery: Battery{}.new(),
     colorSensor: ColorSensor{port: IN_2}.new(),
     speaker: Speaker{}.new(),
+    button: Button{
+      onKeypress: func (key int, state int) {
+        if key == KEY_ESCAPE {
+          end("escape")
+        }
+      },
+    }.new(),
   }
 
   log.inc(":status")
-  log.info("voltage is at " + log.number(bot.battery.voltage()))
+  log.info("voltage is at " + log.value(bot.battery.voltage() + "v"))
   log.dec()
 
-  // go bot.speaker.song([]int{300, 400, 500, 600}, 100, 1)
+  go bot.speaker.song([]int{300, 400, 500, 600}, 100, 1)
 
-  f, err := os.Open("/dev/input/by-path/platform-gpio-keys.0-event")
-  defer f.Close()
-  check(err)
-
-  bytes := make([]byte, 32)
-
-	f.Read(bytes)
-
-  fmt.Println("%d bytes", bytes)
-
-  log.trace("starting loop")
   log.info("looping")
   log.rep("loop")
 
-  // setupInterrupt()
-  // loop()
+  setupInterrupt()
+  loop()
 }
 
 func loop() {
-  time.Sleep(time.Second / 10)
+  time.Sleep(time.Second / 20)
   log.trace("looping")
   loop()
 }
@@ -53,7 +50,16 @@ func setupInterrupt() {
   signal.Notify(stop, os.Interrupt)
   go func() {
     <-stop
-    log.notice("caught ctrl-c")
-    os.Exit(0)
+    end("ctrl-c")
   }()
+}
+
+func end(catch string) {
+  log.set([]string{"end"})
+
+  go bot.speaker.song([]int{600, 500, 400, 300}, 100, 1)
+  log.notice("caught " + catch)
+  log.level = 0
+  time.Sleep(time.Millisecond * 500)
+  os.Exit(0)
 }
