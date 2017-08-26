@@ -27,7 +27,11 @@ func main() {
   }
 
   log.inc(":status")
-  log.info("voltage is at " + log.value(bot.battery.voltage() + "v"))
+  if bot.battery.voltage() > 72 {
+    log.info("voltage is at " + log.value(bot.battery.voltageString() + "v"))
+  } else {
+    log.warn("voltage is at " + log.value(bot.battery.voltageString() + "v"))
+  }
   log.dec()
 
   go bot.speaker.song([]int{300, 400, 500, 600}, 100, 1)

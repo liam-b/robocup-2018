@@ -1,6 +1,6 @@
 package main
 
-// import "strings"
+import "strconv"
 
 type Battery struct {
   path string
@@ -13,10 +13,16 @@ func (battery Battery) new() Battery {
   return battery
 }
 
-func (battery Battery) voltage() string {
+func (battery Battery) voltageString() string {
   voltage := battery.device.get("voltage_now")
   // voltage = voltage[0:len(voltage) - 6]
   return string(voltage[0]) + "." + string(voltage[1])
+}
+
+func (battery Battery) voltage() int {
+  voltage := battery.device.get("voltage_now")
+  output := string(voltage[0]) + string(voltage[1])
+  return strconv.Atoi(output)
 }
 
 // func (battery Battery) voltageNumber() int {
