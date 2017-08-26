@@ -34,7 +34,5 @@ func (button Button) loopKeypressRead() {
   bytes := make([]byte, 32)
   button.file.Read(bytes)
   button.onKeypress(int(bytes[10]), int(bytes[12]))
-  // fmt.Println(strconv.Itoa(int(bytes[10])) + " : " + strconv.Itoa(int(bytes[12])))
-  // fmt.Println(reflect.TypeOf(int(bytes[12])))
   button.loopKeypressRead()
 }

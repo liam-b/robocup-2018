@@ -3,8 +3,7 @@ package main
 import "time"
 import "os/signal"
 import "os"
-// import "fmt"
-// import "strconv"
+import "strconv"
 
 var log Logger = Logger{flag: "test", level: 7}.new("start")
 var bot Bot
@@ -17,6 +16,8 @@ func main() {
     battery: Battery{}.new(),
     colorSensor: ColorSensor{port: IN_2}.new(),
     speaker: Speaker{}.new(),
+    touchSensor: TouchSensor{port: IN_1}.new(),
+
     button: Button{
       onKeypress: func (key int, state int) {
         if key == KEY_ESCAPE {
@@ -45,7 +46,8 @@ func main() {
 
 func loop() {
   time.Sleep(time.Second / 10)
-  log.trace("looping")
+  // log.trace("looping")
+  log.trace(strconv.FormatBool(bot.touchSensor.pressed()))
   loop()
 }
 
@@ -60,10 +62,8 @@ func setupInterrupt() {
 
 func end(catch string) {
   log.set("end")
-
-  go bot.speaker.song([]int{600, 500, 400, 300}, 100, 1)
   log.notice("caught " + catch)
   log.level = 0
-  time.Sleep(time.Millisecond * 500)
+  bot.speaker.song([]int{600, 500, 400, 300}, 100, 1)
   os.Exit(0)
 }

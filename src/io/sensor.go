@@ -1,6 +1,7 @@
 package main
 
 import "strconv"
+import "strings"
 
 type Sensor struct {
   port string
@@ -17,8 +18,10 @@ func (sensor Sensor) new() Sensor {
 }
 
 func (sensor Sensor) value(num string) int {
-  result, _ := strconv.ParseInt(sensor.indexedDevice.get("value" + num), 10, 0)
-  return int(result)
+  value := sensor.indexedDevice.get("value" + num)
+  value = strings.TrimSuffix(value, "\n")
+  result, _ := strconv.Atoi(value)
+  return result
 }
 
 func (sensor Sensor) mode(newMode string) {
@@ -32,8 +35,7 @@ type ColorSensor struct {
 }
 
 func (colorSensor ColorSensor) new() ColorSensor {
-  colorSensor.sensor = Sensor{port: colorSensor.port}
-  colorSensor.sensor.new()
+  colorSensor.sensor = Sensor{port: colorSensor.port}.new()
   return colorSensor
 }
 
@@ -51,4 +53,19 @@ func (colorSensor ColorSensor) color() int {
 
 func (colorSensor ColorSensor) rgb() (int, int, int) {
   return colorSensor.sensor.value("0"), colorSensor.sensor.value("1"), colorSensor.sensor.value("2")
+}
+
+type TouchSensor struct {
+  port string
+
+  sensor Sensor
+}
+
+func (touchSensor TouchSensor) new() TouchSensor {
+  touchSensor.sensor = Sensor{port: touchSensor.port}.new()
+  return touchSensor
+}
+
+func (touchSensor TouchSensor) pressed() bool {
+  return touchSensor.sensor.value("0") == 1
 }

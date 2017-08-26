@@ -1,7 +1,6 @@
 package main
 
 import "strings"
-// import "fmt"
 
 type Device struct {
   path string
@@ -28,7 +27,7 @@ func (device *IndexedDevice) findDeviceFromPort() {
   files := list(device.path)
 
   for _, file := range files {
-    if strings.Contains(read(device.path + "/" + file + "/address"), "in2") {
+    if strings.Contains(read(device.path + "/" + file + "/address"), device.port) {
       device.path = device.path + "/" + file + "/"
       break
     }
