@@ -15,7 +15,7 @@ func main() {
   bot = Bot{
     battery: Battery{}.new(),
     colorSensor: ColorSensor{port: IN_2}.new(),
-    speaker: Speaker{}.new(),
+    speaker: Speaker{playSound: true}.new(),
     touchSensor: TouchSensor{port: IN_1}.new(),
 
     button: Button{
