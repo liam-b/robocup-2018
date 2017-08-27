@@ -5,7 +5,7 @@ import "os/signal"
 import "os"
 import "strconv"
 
-var log Logger = Logger{flag: "test", level: 7}.new("start")
+var log Logger = Logger{flag: "test", level: 7}.new(":start")
 var bot Bot
 
 func main() {
@@ -61,7 +61,7 @@ func setupInterrupt() {
 }
 
 func end(catch string) {
-  log.set("end")
+  log.set(":end")
   log.notice("caught " + catch)
   log.level = 0
   bot.speaker.song([]int{600, 500, 400, 300}, 100, 1)

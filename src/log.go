@@ -41,7 +41,7 @@ func (logger Logger) new(initialMethod string) Logger {
   logger.startTime = time.Now()
   fmt.Println(BOLD + "TRACE " + GREEN + "DEBUG " + BLUE + "INFO " + CYAN + "NOTICE " + /*GREEN + "SUCCESS " + */YELLOW + "WARN " + RED + "ERROR " + "FATAL " + END + PURPLE + "method " + BLACK + "timestamp" + END)
   if initialMethod != "" {
-    logger.inc(initialMethod)
+    logger.inc(initialMethod[1:])
   }
   logger.trace("logger started")
   return logger
@@ -65,7 +65,7 @@ func (logger *Logger) rep(method string) {
 }
 
 func (logger *Logger) set(methods string) {
-  logger.methodString = strings.Split(methods, ":")
+  logger.methodString = strings.Split(methods[1:], ":")
 }
 
 func (logger Logger) trace(text string) {
