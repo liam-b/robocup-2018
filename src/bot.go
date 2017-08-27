@@ -5,5 +5,10 @@ type Bot struct {
   colorSensor ColorSensor
   speaker Speaker
   touchSensor TouchSensor
+  gyroSensor GyroSensor
   button Button
+}
+
+func (bot Bot) new() Bot {
+  return bot
 }

@@ -69,3 +69,18 @@ func (touchSensor TouchSensor) new() TouchSensor {
 func (touchSensor TouchSensor) pressed() bool {
   return touchSensor.sensor.value("0") == 1
 }
+
+type GyroSensor struct {
+  port string
+
+  sensor Sensor
+}
+
+func (gyroSensor GyroSensor) new() GyroSensor {
+  gyroSensor.sensor = Sensor{port: gyroSensor.port}.new()
+  return gyroSensor
+}
+
+func (gyroSensor GyroSensor) angle() int {
+  return gyroSensor.sensor.value("0")
+}

@@ -14,9 +14,10 @@ func main() {
   log.info("setting up io")
   bot = Bot{
     battery: Battery{}.new(),
-    colorSensor: ColorSensor{port: IN_2}.new(),
+    // colorSensor: ColorSensor{port: IN_3}.new(),
     speaker: Speaker{playSound: true}.new(),
     touchSensor: TouchSensor{port: IN_1}.new(),
+    gyroSensor: GyroSensor{port: IN_2}.new(),
 
     button: Button{
       onKeypress: func (key int, state int) {
@@ -35,7 +36,8 @@ func main() {
   }
   log.dec()
 
-  go bot.speaker.song([]int{300, 400, 500, 600}, 100, 1)
+  // go bot.speaker.song([]int{300, 400, 500, 600}, 100, 1)
+  go bot.speaker.song([]int{300, 400, 500, 600, 0, 500, 600}, 100, 1)
 
   log.info("looping")
   log.rep("loop")
@@ -47,7 +49,8 @@ func main() {
 func loop() {
   time.Sleep(time.Second / 10)
   // log.trace("looping")
-  log.trace(strconv.FormatBool(bot.touchSensor.pressed()))
+  // log.trace(strconv.FormatBool(bot.touchSensor.pressed()))
+  log.trace(strconv.Itoa(bot.gyroSensor.angle()))
   loop()
 }
 
