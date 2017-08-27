@@ -15,7 +15,6 @@ func (battery Battery) new() Battery {
 
 func (battery Battery) voltageString() string {
   voltage := battery.device.get("voltage_now")
-  // voltage = voltage[0:len(voltage) - 6]
   return string(voltage[0]) + "." + string(voltage[1])
 }
 
