@@ -31,11 +31,20 @@ func (sensor Sensor) mode(newMode string) {
 type ColorSensor struct {
   port string
 
+  REFLECT string
+  COLOR string
+  RGB string
+
   sensor Sensor
 }
 
 func (colorSensor ColorSensor) new() ColorSensor {
   colorSensor.sensor = Sensor{port: colorSensor.port}.new()
+
+  colorSensor.REFLECT = "COL-REFLECT"
+  colorSensor.COLOR = "COL-COLOR"
+  colorSensor.RGB = "RGB-RAW"
+
   return colorSensor
 }
 
