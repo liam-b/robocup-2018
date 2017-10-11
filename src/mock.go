@@ -10,5 +10,8 @@ func init() {
   BATTERY_PATH = "mock/battery/"
   SOUND_PATH = "mock/sound/"
 
+  DO_KEYBOARD_EVENT = false
+  // DO_KEYBOARD = false
+
   log.dec()
 }
