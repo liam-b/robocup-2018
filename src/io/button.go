@@ -22,11 +22,13 @@ type Button struct {
 }
 
 func (button Button) new() Button {
-  f, err := os.Open("/dev/input/by-path/platform-gpio-keys.0-event")
-  check(err)
+  if DO_KEYBOARD_EVENT {
+    f, err := os.Open("/dev/input/by-path/platform-gpio-keys.0-event")
+    check(err)
 
-  button.file = f
-  go button.loopKeypressRead()
+    button.file = f
+    go button.loopKeypressRead()
+  }
   return button
 }
 

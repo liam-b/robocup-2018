@@ -97,9 +97,9 @@ func (logger *Logger) info(text string) {
 
 func (logger *Logger) notice(text string) {
   if logger.level > 3 {
-    fmt.Println(CYAN + "                ________" + END)
+    // fmt.Println(CYAN + "                 ________" + END)
     printLog(logger.flag, logger.timeDifference(), CYAN, "notice", "!", logger.methodString, text)
-    fmt.Println(CYAN + "                ‾‾‾‾‾‾‾‾" + END)
+    // fmt.Println(CYAN + "                 ‾‾‾‾‾‾‾‾" + END)
   }
   logger.handleOnceCall()
 }
@@ -115,9 +115,9 @@ func (logger *Logger) error(text string) {
 }
 
 func (logger *Logger) fatal(text string) {
-  fmt.Println(RED + "                ‾‾‾‾‾‾‾" + END)
+  // fmt.Println(RED + "                ________" + END)
   if logger.level > 0 { printLog(logger.flag, logger.timeDifference(), RED, "fatal", "☢", logger.methodString, text) }
-  fmt.Println(RED + "                ‾‾‾‾‾‾‾" + END)
+  // fmt.Println(RED + "                ‾‾‾‾‾‾‾‾" + END)
   logger.handleOnceCall()
 }
 

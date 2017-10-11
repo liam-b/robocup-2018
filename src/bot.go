@@ -2,10 +2,12 @@ package main
 
 type Bot struct {
   battery Battery
-  colorSensor ColorSensor
-  speaker Speaker
-  touchSensor TouchSensor
+  colorSensorL ColorSensor
+  colorSensorR ColorSensor
+  ultrasonicSensor UltrasonicSensor
   gyroSensor GyroSensor
+  speaker Speaker
+
   button Button
 }
 

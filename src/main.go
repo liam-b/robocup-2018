@@ -3,7 +3,7 @@ package main
 import "time"
 import "os/signal"
 import "os"
-import "strconv"
+// import "fmt"
 
 var log Logger = Logger{flag: "test", level: 7}.new(":start")
 var bot Bot
@@ -11,15 +11,15 @@ var bot Bot
 func main() {
   log.notice("program started")
 
-  log.inc(":setup")
-    // initialisation things
+  log.inc(":setup") // initialisation things
     log.debug("setting up io")
     bot = Bot{
       battery: Battery{}.new(),
-      // colorSensor: ColorSensor{port: IN_3}.new(),
+      colorSensorL: ColorSensor{port: IN_1}.new(),
+      colorSensorR: ColorSensor{port: IN_2}.new(),
+      ultrasonicSensor: UltrasonicSensor{port: IN_3}.new(),
+      gyroSensor: GyroSensor{port: IN_4}.new(),
       speaker: Speaker{playSound: true}.new(),
-      touchSensor: TouchSensor{port: IN_1}.new(),
-      gyroSensor: GyroSensor{port: IN_2}.new(),
 
       button: Button{
         onKeypress: func (key int, state int) {
@@ -39,21 +39,14 @@ func main() {
     setupInterrupt()
   log.dec()
 
-  log.inc(":mode")
-    // all mode sets and things
+  log.inc(":mode") // all mode sets and things
   log.dec()
 
-  log.inc(":status")
-    // for checking status
+  log.inc(":status") // for checking status
     log.info("checking status")
 
     log.inc(".battery")
-      log.debug("voltage is at " + log.value(bot.battery.voltageString() + "v"))
-      if (bot.battery.voltage() < 72) {
-        log.warn("battery needs replacing now")
-      } else if (bot.battery.voltage() < 75) {
-        log.warn("current voltage is not fit for comp")
-      }
+      checkBatteryVoltage()
     log.dec()
 
   log.dec()
@@ -64,10 +57,9 @@ func main() {
 }
 
 func loop() {
-  time.Sleep(time.Second / 5)
+  time.Sleep(time.Second / time.Duration(LOOP_SPEED))
   // log.trace("looping")
-  // log.trace(strconv.FormatBool(bot.touchSensor.pressed()))
-  log.trace(strconv.Itoa(bot.gyroSensor.angle()))
+  printStatusWindow()
   loop()
 }
 
