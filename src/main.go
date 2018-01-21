@@ -33,6 +33,7 @@ func main() {
 
     log.once(".sound")
     log.trace("playing startup sound")
+    bot.speaker.volume(VOLUME)
     bot.speaker.song([]int{400, 400, 0, 500, 500}, 50, 1)
     time.Sleep(time.Millisecond * time.Duration(300))
 
