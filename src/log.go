@@ -39,8 +39,9 @@ type Logger struct {
 }
 
 func (logger Logger) new(initialMethod string) Logger {
+  fmt.Println("  ____   ___  ____   ___   ____ _   _ ____    ____   ___  _  ___  \r\n |  _ \\ / _ \\| __ ) / _ \\ / ___| | | |  _ \\  |___ \\ / _ \\/ |( _ ) \r\n | |_) | | | |  _ \\| | | | |   | | | | |_) |   __) | | | | |/ _ \\ \r\n |  _ <| |_| | |_) | |_| | |___| |_| |  __/   / __/| |_| | | (_) |\r\n |_| \\_\\\\___/|____/ \\___/ \\____|\\___/|_|     |_____|\\___/|_|\\___/ \r\n          ")
   logger.startTime = time.Now()
-  fmt.Println(BOLD + "TRACE " + GREEN + "DEBUG " + BLUE + "INFO " + CYAN + "NOTICE " + /*GREEN + "SUCCESS " + */YELLOW + "WARN " + RED + "ERROR " + "FATAL " + END + PURPLE + "method " + BLACK + "timestamp" + END)
+  fmt.Println(BOLD + "TRACE " + GREEN + "DEBUG " + BLUE + "INFO " + CYAN + "NOTICE " + /*GREEN + "SUCCESS " + */YELLOW + "WARN " + RED + "ERROR " + "FATAL " + END + PURPLE + "method " + BLACK + "meta" + END)
   if initialMethod != "" {
     logger.inc(initialMethod[1:])
   }
@@ -50,7 +51,7 @@ func (logger Logger) new(initialMethod string) Logger {
 }
 
 func (logger *Logger) timeDifference() string {
-  return strconv.Itoa(int(time.Since(logger.startTime).Minutes())) + ":" + strconv.Itoa(int(time.Since(logger.startTime).Seconds()) % 60)
+  return pad(strconv.Itoa(int(time.Since(logger.startTime).Minutes())), 2) + ":" + pad(strconv.Itoa(int(time.Since(logger.startTime).Seconds()) % 60), 2)
 }
 
 func (logger *Logger) inc(method string) {
@@ -106,11 +107,13 @@ func (logger *Logger) notice(text string) {
 
 func (logger *Logger) warn(text string) {
   if logger.level > 2 { printLog(logger.flag, logger.timeDifference(), YELLOW, "warn ", "⚠", logger.methodString, text) }
+  bot.speaker.song([]int{350, 350, 0, 350, 350, 0, 350, 350}, 50, 1)
   logger.handleOnceCall()
 }
 
 func (logger *Logger) error(text string) {
   if logger.level > 1 { printLog(logger.flag, logger.timeDifference(), RED, "error", "×", logger.methodString, text) }
+  bot.speaker.song([]int{250, 250, 250, 250, 0, 250, 250, 250, 250}, 50, 1)
   logger.handleOnceCall()
 }
 
@@ -118,6 +121,7 @@ func (logger *Logger) fatal(text string) {
   // fmt.Println(RED + "                ________" + END)
   if logger.level > 0 { printLog(logger.flag, logger.timeDifference(), RED, "fatal", "☢", logger.methodString, text) }
   // fmt.Println(RED + "                ‾‾‾‾‾‾‾‾" + END)
+  bot.speaker.song([]int{300, 300, 300, 0, 0, 300, 300, 300, 0, 0, 300, 300, 300}, 50, 1)
   logger.handleOnceCall()
 }
 

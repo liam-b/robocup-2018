@@ -1,6 +1,7 @@
 package main
 
 import "io/ioutil"
+import "os"
 
 const IN_1 = "in1"
 const IN_2 = "in2"
@@ -48,4 +49,9 @@ func list(path string) []string {
     stringFiles[i] = file.Name()
   }
   return stringFiles
+}
+
+func exists(path string) bool {
+  _, err := os.Stat(path)
+  return os.IsNotExist(err)
 }

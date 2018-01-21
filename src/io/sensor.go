@@ -111,11 +111,18 @@ type GyroSensor struct {
 
 func (gyroSensor GyroSensor) new() GyroSensor {
   gyroSensor.sensor = Sensor{port: gyroSensor.port}.new()
+  gyroSensor.sensor.mode("GYRO-CAL")
+  gyroSensor.sensor.mode("GYRO-ANG")
   return gyroSensor
 }
 
 func (gyroSensor GyroSensor) angle() int {
   return gyroSensor.sensor.value("0")
+}
+
+func (gyroSensor GyroSensor) reset() {
+  gyroSensor.sensor.mode("GYRO-CAL")
+  gyroSensor.sensor.mode("GYRO-ANG")
 }
 
 type UltrasonicSensor struct {

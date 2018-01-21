@@ -4,16 +4,16 @@ import "fmt"
 
 func printStatusWindow() {
   fmt.Println(`  ---------------------------------------------------------
-  |[Sensors]                                              |
-  | colorL:  ` + progressBar(float64(bot.colorSensorL.intensity()), 10, 10, false) + ` [w]                               |
-  | colorR:  ` + progressBar(float64(bot.colorSensorR.intensity()), 10, 10, false) + ` [b]       ⇡⇡     [Extra]          |
-  | dist:    ` + progressBar(float64(bot.ultrasonicSensor.distance()), 10, 10, false) + ` [w]      ┌__┐     tile:  line     |
-  | angle:   ` + progressBar(float64(bot.gyroSensor.angle()), 10, 10, false) + ` [n]    ⇠ ╭──╮ ⇢   stage: transit  |
-  |                             ╭│__│╮                    |
-  |[Motors]                     ╰└──┘╯                    |
-  | driveL:  ` + progressBar(float64(bot.gyroSensor.angle()), 5, 10, true) + `|` + progressBar(float64(bot.gyroSensor.angle()), 5, 10, false) + `          ⇣⇣                      |
-  | driveR:  ` + progressBar(float64(bot.gyroSensor.angle()), 5, 10, true) + `|` + progressBar(float64(bot.gyroSensor.angle()), 5, 10, false) + `                                  |
-  | claw:    ░░░░░|░░░░░                                  |
+  |[Sensors]                                               |
+  | colorL:  ` + progressBar(float64(bot.colorSensorL.intensity()), 11, 10, false) + ` [w]                               |
+  | colorR:  ` + progressBar(float64(bot.colorSensorR.intensity()), 11, 10, false) + ` [b]       ⇡⇡     [Extra]          |
+  | dist:    ` + progressBar(float64(1000 - bot.ultrasonicSensor.distance()), 11, 1000, false) + ` [w]      ┌__┐     tile:  line     |
+  |                             ⇠ ╭──╮ ⇢   stage: transit  |
+  |                              ╭│__│╮                    |
+  |[Motors]                      ╰└──┘╯                    |
+  | driveL:  ` + progressBar(float64(bot.gyroSensor.angle()), 5, 10, true) + `|` + progressBar(float64(bot.gyroSensor.angle()), 5, 10, false) + `           ⇣⇣                      |
+  | driveR:  ` + progressBar(float64(bot.gyroSensor.angle()), 5, 10, true) + `|` + progressBar(float64(bot.gyroSensor.angle()), 5, 10, false) + `                                   |
+  | claw:    ░░░░░|░░░░░                                   |
   ---------------------------------------------------------`)
 }
 

@@ -4,6 +4,7 @@ import "time"
 import "os/signal"
 import "os"
 // import "fmt"
+import "strconv"
 
 var log Logger = Logger{flag: "test", level: 7}.new(":start")
 var bot Bot
@@ -22,7 +23,7 @@ func main() {
       speaker: Speaker{playSound: true}.new(),
 
       button: Button{
-        onKeypress: func (key int, state int) {
+        onKeypress: func(key int, state int) {
           if key == KEY_ESCAPE {
             end("escape")
           }
@@ -32,7 +33,8 @@ func main() {
 
     log.once(".sound")
     log.trace("playing startup sound")
-    go bot.speaker.song([]int{400, 400, 0, 500, 500}, 50, 1)
+    bot.speaker.song([]int{400, 400, 0, 500, 500}, 50, 1)
+    time.Sleep(time.Millisecond * time.Duration(300))
 
     log.once(".interrupt")
     log.trace("setting up interrupts")
@@ -59,7 +61,8 @@ func main() {
 func loop() {
   time.Sleep(time.Second / time.Duration(LOOP_SPEED))
   // log.trace("looping")
-  printStatusWindow()
+  log.debug(strconv.Itoa(bot.gyroSensor.angle()))
+  // printStatusWindow()
   loop()
 }
 

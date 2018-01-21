@@ -1,6 +1,8 @@
 package main
 
 import "strings"
+import "errors"
+// import "fmt"
 
 type Device struct {
   path string
@@ -25,12 +27,18 @@ type IndexedDevice struct {
 
 func (device *IndexedDevice) findDeviceFromPort() {
   files := list(device.path)
+  foundDevice := false
 
   for _, file := range files {
     if strings.Contains(read(device.path + "/" + file + "/address"), device.port) {
       device.path = device.path + "/" + file + "/"
+      foundDevice = true
       break
     }
+  }
+
+  if !foundDevice {
+    check(errors.New("no device in address " + device.port))
   }
 }
 
