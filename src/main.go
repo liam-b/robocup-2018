@@ -62,7 +62,8 @@ func main() {
 func loop() {
   time.Sleep(time.Second / time.Duration(LOOP_SPEED))
   // log.trace("looping")
-  log.debug(strconv.Itoa(bot.gyroSensor.angle()))
+  // log.debug(strconv.Itoa(bot.gyroSensor.angle()))
+  log.debug(strconv.Itoa(bot.colorSensorL.rgbIntensity()))
   // printStatusWindow()
   loop()
 }
