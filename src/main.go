@@ -6,7 +6,7 @@ import "os"
 // import "fmt"
 import "strconv"
 
-var log Logger = Logger{flag: "test", level: 7}.new(":start")
+var log Logger = Logger{flag: "test", level: LOG_LEVEL}.new(":start")
 var bot Bot
 
 func main() {
@@ -35,7 +35,7 @@ func main() {
     log.trace("playing startup sound")
     bot.speaker.volume(VOLUME)
     bot.speaker.song([]int{400, 400, 0, 500, 500}, 50, 1)
-    time.Sleep(time.Millisecond * time.Duration(300))
+    time.Sleep(time.Millisecond * time.Duration(200))
 
     log.once(".interrupt")
     log.trace("setting up interrupts")

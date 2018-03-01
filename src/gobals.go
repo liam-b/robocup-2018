@@ -1,5 +1,6 @@
 package main
 
+var LOG_LEVEL = 7
 var DO_KEYBOARD_EVENT = true
 
 var LOOP_SPEED = 10
