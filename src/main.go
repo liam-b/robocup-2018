@@ -6,7 +6,7 @@ import "os"
 // import "fmt"
 import "strconv"
 
-var log Logger = Logger{flag: "test", level: 7}.new(":start")
+var log Logger = Logger{flag: "test", level: LOG_LEVEL}.new(":start")
 var bot Bot
 
 func main() {
@@ -16,11 +16,14 @@ func main() {
     log.debug("setting up io")
     bot = Bot{
       battery: Battery{}.new(),
-      colorSensorL: ColorSensor{port: IN_1}.new(),
-      colorSensorR: ColorSensor{port: IN_2}.new(),
-      ultrasonicSensor: UltrasonicSensor{port: IN_3}.new(),
-      gyroSensor: GyroSensor{port: IN_4}.new(),
+      colorSensorR: ColorSensor{port: IN_1}.new(),
+      colorSensorL: ColorSensor{port: IN_2}.new(),
+      // ultrasonicSensor: UltrasonicSensor{port: IN_3}.new(),
+      // gyroSensor: GyroSensor{port: IN_4}.new(),
       speaker: Speaker{playSound: true}.new(),
+
+      motorL: Motor{port: OUT_D}.new(),
+      motorR: Motor{port: OUT_B}.new(),
 
       button: Button{
         onKeypress: func(key int, state int) {
@@ -33,8 +36,9 @@ func main() {
 
     log.once(".sound")
     log.trace("playing startup sound")
+    bot.speaker.volume(VOLUME)
     bot.speaker.song([]int{400, 400, 0, 500, 500}, 50, 1)
-    time.Sleep(time.Millisecond * time.Duration(300))
+    time.Sleep(time.Millisecond * time.Duration(200))
 
     log.once(".interrupt")
     log.trace("setting up interrupts")
@@ -42,6 +46,12 @@ func main() {
   log.dec()
 
   log.inc(":mode") // all mode sets and things
+    log.trace("setting sensor modes")
+    bot.colorSensorL.mode(bot.colorSensorL.REFLECT)
+    bot.colorSensorR.mode(bot.colorSensorR.REFLECT)
+
+    // bot.motorR.runForever(200)
+    // bot.motorL.runForever(200)
   log.dec()
 
   log.inc(":status") // for checking status
@@ -61,7 +71,9 @@ func main() {
 func loop() {
   time.Sleep(time.Second / time.Duration(LOOP_SPEED))
   // log.trace("looping")
-  log.debug(strconv.Itoa(bot.gyroSensor.angle()))
+  // log.debug(strconv.Itoa(bot.gyroSensor.angle()))
+  log.debug(strconv.Itoa(bot.colorSensorL.intensity()) + " | " + strconv.Itoa(bot.colorSensorR.intensity()))
+  followLine()
   // printStatusWindow()
   loop()
 }
@@ -82,5 +94,12 @@ func end(catch string) {
   log.trace("playing exit sound")
   log.level = 0
   bot.speaker.song([]int{500, 500, 0, 400, 400}, 50, 1)
+
+  bot.motorL.stop()
+  bot.motorR.stop()
+
   os.Exit(0)
+
+  bot.motorL.stop()
+  bot.motorR.stop()
 }

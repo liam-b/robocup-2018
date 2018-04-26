@@ -65,6 +65,10 @@ func (colorSensor ColorSensor) rgb() (int, int, int) {
   return colorSensor.sensor.value("0"), colorSensor.sensor.value("1"), colorSensor.sensor.value("2")
 }
 
+func (colorSensor ColorSensor) rgbIntensity() int {
+  return (colorSensor.sensor.value("0") + colorSensor.sensor.value("1") + colorSensor.sensor.value("2")) / 3
+}
+
 // type LineSensors struct {
 //   leftPort string
 //   rightPort string
