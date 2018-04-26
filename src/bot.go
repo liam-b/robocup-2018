@@ -8,6 +8,9 @@ type Bot struct {
   gyroSensor GyroSensor
   speaker Speaker
 
+  motorL Motor
+  motorR Motor
+
   button Button
 }
 
