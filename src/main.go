@@ -3,7 +3,6 @@ package main
 import "time"
 import "os/signal"
 import "os"
-// import "fmt"
 import "strconv"
 
 var log Logger = Logger{flag: "test", level: LOG_LEVEL}.new(":start")
@@ -12,7 +11,8 @@ var bot Bot
 func main() {
   log.notice("program started")
 
-  log.inc(":setup") // initialisation things
+  // setup the robot //
+  log.inc(":setup")
     log.debug("setting up io")
     bot = Bot{
       battery: Battery{}.new(),
@@ -25,22 +25,22 @@ func main() {
     }
 
     log.once(".interrupt")
-    log.trace("setting up interrupts")
-    setupInterrupt()
+      log.trace("setting up interrupts")
+      setupInterrupt()
   log.dec()
 
-  log.inc(":mode") // all mode sets and things
+  // initial mode selections //
+  log.inc(":mode")
     log.trace("setting sensor modes")
     bot.colorSensorL.mode(bot.colorSensorL.REFLECT)
     bot.colorSensorR.mode(bot.colorSensorR.REFLECT)
-
-    // bot.motorR.runForever(200)
-    // bot.motorL.runForever(200)
+    bot.ultrasonicSensor.mode(bot.ultrasonicSensor.US_DIST_CM)
   log.dec()
 
-  log.inc(":status") // for checking status
+  // status checks //
+  log.inc(":status")
     log.info("checking status")
-    checkBatteryVoltage()
+    batteryStatus()
   log.dec()
 
   log.info("looping")
@@ -67,6 +67,7 @@ func setupInterrupt() {
   }()
 }
 
+// exit function //
 func end(catch string) {
   log.set(":end")
   log.notice("caught " + catch)
@@ -78,7 +79,4 @@ func end(catch string) {
   bot.motorR.stop()
 
   os.Exit(0)
-
-  bot.motorL.stop()
-  bot.motorR.stop()
 }

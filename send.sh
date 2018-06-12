@@ -1,9 +1,18 @@
-# set -e
-# rm pkg/*.go
-# cp src/**/*.go pkg/
-# cp src/*.go pkg/
-echo "> sending executable to $1"
-scp -q bin/robocup $1:/home/robot/src/bin/
-echo "> sent"
-
-# scp -r pkg/ $1:/home/robot/robocup-2018/
+echo -e "> \033[0;32mbuilding\033[0;0m"
+env GOOS=linux GOARCH=arm GOARM=5 go build -o robocup src/*.go
+if [[ $? != 0 ]]; then
+  echo -e "< \033[0;31mbuild failed\033[0;0m"
+  exit
+else
+  echo -e "| \033[0;32mbuild finished\033[0;0m"
+  rm bin/* 2> /dev/null
+  mv robocup bin/
+  echo -e "| \033[0;32msending executable\033[0;0m"
+  scp -q bin/robocup $1:/home/robot/src/bin/
+  if [[ $? != 0 ]]; then
+    echo -e "< \033[0;31msend failed\033[0;0m"
+    exit
+  else
+    echo -e "< \033[0;32mdone\033[0;0m"
+  fi
+fi

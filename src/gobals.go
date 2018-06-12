@@ -4,7 +4,7 @@ var LOG_LEVEL = 7
 var DO_KEYBOARD_EVENT = true
 
 var LOOP_SPEED = 20
-var SENSOR_INIT_DELAY = 2
+var SENSOR_INIT_DELAY = 1000
 
 var VOLUME = 100
 

@@ -5,6 +5,7 @@ import "os"
 import "strings"
 import "errors"
 import "strconv"
+import "time"
 
 const S1 = "spi0.1:S1"
 const S2 = "spi0.1:S2"
@@ -137,7 +138,7 @@ func (device *ManualDevice) findDeviceFromPort() {
   }
 
   if !foundInitialDevice {
-    time.Sleep(time.Second * time.Duration(SENSOR_INIT_DELAY))
+    time.Sleep(time.Second * time.Duration(SENSOR_INIT_DELAY / 1000))
 
     portPath := LEGO_PORT + PORT[device.port] + "/"
     write(portPath + "mode", device.connection)
