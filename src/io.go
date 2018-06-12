@@ -137,6 +137,8 @@ func (device *ManualDevice) findDeviceFromPort() {
   }
 
   if !foundInitialDevice {
+    time.Sleep(time.Second * time.Duration(SENSOR_INIT_DELAY))
+
     portPath := LEGO_PORT + PORT[device.port] + "/"
     write(portPath + "mode", device.connection)
     write(portPath + "set_device", device.name)

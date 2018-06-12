@@ -17,7 +17,8 @@ func (bot Bot) new() Bot {
 func checkBatteryVoltage() {
   log.inc(".battery")
     log.debug("voltage is at " + log.value(bot.battery.voltageString() + "v"))
-    if (bot.battery.voltage() < 700) {
+    // log.trace(string(bot.battery.voltage()))
+    else if (bot.battery.voltage() < 700) {
       log.error("replace battery now")
     } else if (bot.battery.voltage() < 750) {
       log.warn("battery needs replacing")

@@ -24,8 +24,6 @@ func main() {
       // motorR: Motor{port: MB}.new(),
     }
 
-    time.Sleep(time.Second * time.Duration(SETUP_DELAY))
-
     log.once(".interrupt")
     log.trace("setting up interrupts")
     setupInterrupt()
