@@ -16,29 +16,15 @@ func main() {
     log.debug("setting up io")
     bot = Bot{
       battery: Battery{}.new(),
-      colorSensorR: ColorSensor{port: IN_1}.new(),
-      colorSensorL: ColorSensor{port: IN_2}.new(),
-      // ultrasonicSensor: UltrasonicSensor{port: IN_3}.new(),
-      // gyroSensor: GyroSensor{port: IN_4}.new(),
-      speaker: Speaker{playSound: true}.new(),
+      colorSensorR: ColorSensor{port: S2}.new(),
+      colorSensorL: ColorSensor{port: S3}.new(),
+      ultrasonicSensor: UltrasonicSensor{port: S4}.new(),
 
-      motorL: Motor{port: OUT_D}.new(),
-      motorR: Motor{port: OUT_B}.new(),
-
-      button: Button{
-        onKeypress: func(key int, state int) {
-          if key == KEY_ESCAPE {
-            end("escape")
-          }
-        },
-      }.new(),
+      // motorL: Motor{port: MC}.new(),
+      // motorR: Motor{port: MB}.new(),
     }
 
-    log.once(".sound")
-    log.trace("playing startup sound")
-    bot.speaker.volume(VOLUME)
-    bot.speaker.song([]int{400, 400, 0, 500, 500}, 50, 1)
-    time.Sleep(time.Millisecond * time.Duration(200))
+    time.Sleep(time.Second * time.Duration(SETUP_DELAY))
 
     log.once(".interrupt")
     log.trace("setting up interrupts")
@@ -56,11 +42,7 @@ func main() {
 
   log.inc(":status") // for checking status
     log.info("checking status")
-
-    log.inc(".battery")
-      checkBatteryVoltage()
-    log.dec()
-
+    checkBatteryVoltage()
   log.dec()
 
   log.info("looping")
@@ -72,8 +54,8 @@ func loop() {
   time.Sleep(time.Second / time.Duration(LOOP_SPEED))
   // log.trace("looping")
   // log.debug(strconv.Itoa(bot.gyroSensor.angle()))
-  log.debug(strconv.Itoa(bot.colorSensorL.intensity()) + " | " + strconv.Itoa(bot.colorSensorR.intensity()))
-  followLine()
+  log.debug("col left: " + strconv.Itoa(bot.colorSensorL.intensity()) + ", col right: " + strconv.Itoa(bot.colorSensorR.intensity()) + ", ultra dist: " + strconv.Itoa(bot.ultrasonicSensor.distance()))
+  // followLine()
   // printStatusWindow()
   loop()
 }
@@ -93,7 +75,6 @@ func end(catch string) {
   log.once(".sound")
   log.trace("playing exit sound")
   log.level = 0
-  bot.speaker.song([]int{500, 500, 0, 400, 400}, 50, 1)
 
   bot.motorL.stop()
   bot.motorR.stop()

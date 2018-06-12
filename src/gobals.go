@@ -3,7 +3,8 @@ package main
 var LOG_LEVEL = 7
 var DO_KEYBOARD_EVENT = true
 
-var LOOP_SPEED = 30
+var LOOP_SPEED = 20
+var SETUP_DELAY = 1
 
 var VOLUME = 100
 

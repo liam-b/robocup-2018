@@ -107,13 +107,13 @@ func (logger *Logger) notice(text string) {
 
 func (logger *Logger) warn(text string) {
   if logger.level > 2 { printLog(logger.flag, logger.timeDifference(), YELLOW, "warn ", "⚠", logger.methodString, text) }
-  go bot.speaker.warn()
+  // go bot.speaker.warn()
   logger.handleOnceCall()
 }
 
 func (logger *Logger) error(text string) {
   if logger.level > 1 { printLog(logger.flag, logger.timeDifference(), RED, "error", "×", logger.methodString, text) }
-  go bot.speaker.error()
+  // go bot.speaker.error()
   logger.handleOnceCall()
 }
 
@@ -121,7 +121,7 @@ func (logger *Logger) fatal(text string) {
   // fmt.Println(RED + "                ________" + END)
   if logger.level > 0 { printLog(logger.flag, logger.timeDifference(), RED, "fatal", "☢", logger.methodString, text) }
   // fmt.Println(RED + "                ‾‾‾‾‾‾‾‾" + END)
-  go bot.speaker.fatal()
+  // go bot.speaker.fatal()
   logger.handleOnceCall()
 }
 
