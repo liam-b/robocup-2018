@@ -19,7 +19,7 @@ const WHITE = ""
 var counter int
 
 func printLog(flag string, difference string, color string, name string, symbol string, method []string, text string) {
-  fmt.Println(BLACK + difference + " " + pad(strconv.Itoa(counter), 5) + " " + "(" + flag + ")" + END + " " + BOLD + color + symbol + " " + strings.ToUpper(name) + END + " " + PURPLE + strings.Join(method, "") + END + " " + text)
+  fmt.Println(BLACK + difference + " " + pad(strconv.Itoa(counter), 5) + " " + BOLD + "(" + flag + ")" + END + " " + BOLD + color + symbol + " " + strings.ToUpper(name) + END + " " + PURPLE + strings.Join(method, "") + END + " " + text)
   counter += 1
 }
 
