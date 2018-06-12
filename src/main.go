@@ -3,7 +3,10 @@ package main
 import "time"
 import "os/signal"
 import "os"
-import "strconv"
+// import "strconv"
+
+import "./go-i2c"
+import "fmt"
 
 var log Logger = Logger{flag: "test", level: LOG_LEVEL}.new(":start")
 var bot Bot
@@ -45,6 +48,14 @@ func main() {
 
   log.info("looping")
   log.rep("loop")
+
+  i2c, _ := i2c.NewI2C(0x68, 1)
+  // if err != nil {log.fatal(err)}
+  defer i2c.Close()
+  res, _ := i2c.ReadRegU8(0x3F)
+  // if err != nil { log.Fatal(err) }
+  fmt.Println(res)
+
   loop()
 }
 
@@ -52,7 +63,7 @@ func loop() {
   time.Sleep(time.Second / time.Duration(LOOP_SPEED))
   // log.trace("looping")
   // log.debug(strconv.Itoa(bot.gyroSensor.angle()))
-  log.debug("col left: " + strconv.Itoa(bot.colorSensorL.intensity()) + ", col right: " + strconv.Itoa(bot.colorSensorR.intensity()) + ", ultra dist: " + strconv.Itoa(bot.ultrasonicSensor.distance()))
+  // log.debug("col left: " + strconv.Itoa(bot.colorSensorL.intensity()) + ", col right: " + strconv.Itoa(bot.colorSensorR.intensity()) + ", ultra dist: " + strconv.Itoa(bot.ultrasonicSensor.distance()))
   // followLine()
   // printStatusWindow()
   loop()
@@ -71,8 +82,7 @@ func setupInterrupt() {
 func end(catch string) {
   log.set(":end")
   log.notice("caught " + catch)
-  log.once(".sound")
-  log.trace("playing exit sound")
+  log.trace("exiting program")
   log.level = 0
 
   bot.motorL.stop()
