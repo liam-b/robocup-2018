@@ -363,12 +363,13 @@ func (battery Battery) new() Battery {
 
 func (battery Battery) voltageString() string {
   voltage := battery.device.get("voltage_now")
-  return string(voltage[0]) + "." + string(voltage[1])
+  voltageString := string(voltage[0:len(voltage) - 6])
+  return voltageString[:2] + "." + voltageString[2:]
 }
 
 func (battery Battery) voltage() int {
   voltage := battery.device.get("voltage_now")
-  output := string(voltage[0]) + string(voltage[1])
+  output := string(voltage[0:len(voltage) - 6])
   value, _ := strconv.Atoi(output)
   return value
 }
