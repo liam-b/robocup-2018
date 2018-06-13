@@ -4,11 +4,11 @@ import "time"
 import "os/signal"
 import "os"
 // import "strconv"
+// import "fmt"
 
-import "./go-i2c"
-import "fmt"
+import "./io"
 
-var log Logger = Logger{flag: "test", level: LOG_LEVEL}.new(":start")
+var log Logger = Logger{flag: "test", level: LOG_LEVEL}.New(":start")
 var bot Bot
 
 func main() {
@@ -18,13 +18,13 @@ func main() {
   log.inc(":setup")
     log.debug("setting up io")
     bot = Bot{
-      battery: Battery{}.new(),
-      colorSensorR: ColorSensor{port: S2}.new(),
-      colorSensorL: ColorSensor{port: S3}.new(),
-      ultrasonicSensor: UltrasonicSensor{port: S4}.new(),
+      battery: io.Battery{}.New(),
+      colorSensorR: io.ColorSensor{Port: io.S2}.New(),
+      colorSensorL: io.ColorSensor{Port: io.S3}.New(),
+      ultrasonicSensor: io.UltrasonicSensor{Port: io.S4}.New(),
 
-      // motorL: Motor{port: MC}.new(),
-      // motorR: Motor{port: MB}.new(),
+      // motorL: Motor{Port: io.MC}.New(),
+      // motorR: Motor{Port: io.MB}.New(),
     }
 
     log.once(".interrupt")
@@ -35,9 +35,9 @@ func main() {
   // initial mode selections //
   log.inc(":mode")
     log.trace("setting sensor modes")
-    bot.colorSensorL.mode(bot.colorSensorL.REFLECT)
-    bot.colorSensorR.mode(bot.colorSensorR.REFLECT)
-    bot.ultrasonicSensor.mode(bot.ultrasonicSensor.US_DIST_CM)
+    bot.colorSensorL.Mode(bot.colorSensorL.REFLECT)
+    bot.colorSensorR.Mode(bot.colorSensorR.REFLECT)
+    bot.ultrasonicSensor.Mode(bot.ultrasonicSensor.US_DIST_CM)
   log.dec()
 
   // status checks //
@@ -49,12 +49,12 @@ func main() {
   log.info("looping")
   log.rep("loop")
 
-  i2c, _ := i2c.NewI2C(0x68, 1)
-  // if err != nil {log.fatal(err)}
-  defer i2c.Close()
-  res, _ := i2c.ReadRegU8(0x3F)
-  // if err != nil { log.Fatal(err) }
-  fmt.Println(res)
+  // i2c, _ := i2c.NewI2C(0x68, 1)
+  // // if err != nil {log.fatal(err)}
+  // defer i2c.Close()
+  // res, _ := i2c.ReadRegU8(0x3F)
+  // // if err != nil { log.Fatal(err) }
+  // fmt.Println(res)
 
   loop()
 }
@@ -85,8 +85,8 @@ func end(catch string) {
   log.trace("exiting program")
   log.level = 0
 
-  bot.motorL.stop()
-  bot.motorR.stop()
+  bot.motorL.Stop()
+  bot.motorR.Stop()
 
   os.Exit(0)
 }

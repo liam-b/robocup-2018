@@ -1,14 +1,16 @@
 package main
 
+import "./io"
+
 // main bot class //
 type Bot struct {
-  battery Battery
-  colorSensorL ColorSensor
-  colorSensorR ColorSensor
-  ultrasonicSensor UltrasonicSensor
+  battery io.Battery
+  colorSensorL io.ColorSensor
+  colorSensorR io.ColorSensor
+  ultrasonicSensor io.UltrasonicSensor
 
-  motorL Motor
-  motorR Motor
+  motorL io.Motor
+  motorR io.Motor
 }
 
 func (bot Bot) new() Bot {
@@ -18,13 +20,14 @@ func (bot Bot) new() Bot {
 // status checks //
 func batteryStatus() {
   log.inc(".battery")
-    log.debug("voltage is at " + log.value(bot.battery.voltageString() + "v"))
+    log.debug("voltage is at " + log.value(bot.battery.VoltageString() + "v"))
+    currentVoltage := bot.battery.Voltage()
 
-    if (bot.battery.voltage() > 125) {
+    if (currentVoltage > 125) {
       log.warn("possible overvolting")
-    } else if (bot.battery.voltage() < 70) {
+    } else if (currentVoltage < 70) {
       log.error("replace battery now")
-    } else if (bot.battery.voltage() < 75) {
+    } else if (currentVoltage < 75) {
       log.warn("battery needs replacing")
     }
   log.dec()
