@@ -45,7 +45,7 @@ func (logger Logger) New(initialMethod string) Logger {
   if initialMethod != "" {
     logger.inc(initialMethod[1:])
   }
-  logger.trace("logger started at level " + strconv.Itoa(logger.level))
+  if logger.level > 6 { logger.trace("logger started at level " + strconv.Itoa(logger.level)) }
   logger.calledOnce = false
   return logger
 }

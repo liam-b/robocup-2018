@@ -4,7 +4,7 @@ import "time"
 import "os/signal"
 import "os"
 // import "strconv"
-// import "fmt"
+import "fmt"
 
 import "./io"
 
@@ -23,8 +23,8 @@ func main() {
       colorSensorL: io.ColorSensor{Port: io.S3}.New(),
       ultrasonicSensor: io.UltrasonicSensor{Port: io.S4}.New(),
 
-      // motorL: Motor{Port: io.MC}.New(),
-      // motorR: Motor{Port: io.MB}.New(),
+      // motorL: Motor{Port: io.MC, Logger: log}.New(),
+      // motorR: Motor{Port: io.MB, Logger: log}.New(),
     }
 
     log.once(".interrupt")
@@ -49,12 +49,12 @@ func main() {
   log.info("looping")
   log.rep("loop")
 
-  // i2c, _ := i2c.NewI2C(0x68, 1)
-  // // if err != nil {log.fatal(err)}
-  // defer i2c.Close()
-  // res, _ := i2c.ReadRegU8(0x3F)
-  // // if err != nil { log.Fatal(err) }
-  // fmt.Println(res)
+  i2c, _ := io.NewI2C(0x68, 1)
+  // if err != nil {log.fatal(err)}
+  defer i2c.Close()
+  res, _ := i2c.ReadRegU8(0x3F)
+  // if err != nil { log.Fatal(err) }
+  fmt.Println(res)
 
   loop()
 }

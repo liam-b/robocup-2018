@@ -1,6 +1,6 @@
-package main
+package behaviour
 
-func followLine() {
+func FollowLine() {
   intensityL := bot.colorSensorL.Intensity()
   intensityR := bot.colorSensorR.Intensity()
 
