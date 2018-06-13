@@ -3,7 +3,7 @@ package main
 import "time"
 import "os/signal"
 import "os"
-import "fmt"
+import "strconv"
 
 import "./io"
 
@@ -47,8 +47,6 @@ func main() {
     batteryStatus()
   log.dec()
 
-  fmt.Println(bot.imu.GetByte(0x3F))
-
   log.info("looping")
   log.rep("loop")
   loop()
@@ -61,6 +59,7 @@ func loop() {
   // log.debug("col left: " + strconv.Itoa(bot.colorSensorL.intensity()) + ", col right: " + strconv.Itoa(bot.colorSensorR.intensity()) + ", ultra dist: " + strconv.Itoa(bot.ultrasonicSensor.distance()))
   // followLine()
   // printStatusWindow()
+  log.trace(strconv.Itoa(bot.imu.ReadGyro()))
   loop()
 }
 
@@ -82,6 +81,7 @@ func end(catch string) {
 
   bot.motorL.Stop()
   bot.motorR.Stop()
+  bot.imu.Cleanup()
 
   os.Exit(0)
 }
