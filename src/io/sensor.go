@@ -73,7 +73,7 @@ func (colorSensor ColorSensor) RgbIntensity() int {
 type UltrasonicSensor struct {
   Port string
 
-  US_DIST_CM string
+  DISTANCE string
 
   sensor Sensor
 }
@@ -81,7 +81,7 @@ type UltrasonicSensor struct {
 func (ultrasonicSensor UltrasonicSensor) New() UltrasonicSensor {
   ultrasonicSensor.sensor = Sensor{Port: ultrasonicSensor.Port, connection: "ev3-uart", name: "lego-ev3-us"}.New()
 
-  ultrasonicSensor.US_DIST_CM = "US-DIST-CM"
+  ultrasonicSensor.DISTANCE = "US-DIST-CM"
 
   return ultrasonicSensor
 }

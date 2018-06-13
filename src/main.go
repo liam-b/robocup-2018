@@ -40,9 +40,9 @@ func main() {
   // initial mode selections //
   log.inc(":mode")
     log.trace("setting sensor modes")
-    bot.colorSensorL.Mode(bot.colorSensorL.REFLECT)
-    bot.colorSensorR.Mode(bot.colorSensorR.REFLECT)
-    bot.ultrasonicSensor.Mode(bot.ultrasonicSensor.US_DIST_CM)
+    bot.colorSensorL.Mode(bot.colorSensorL.RGB)
+    bot.colorSensorR.Mode(bot.colorSensorR.RGB)
+    bot.ultrasonicSensor.Mode(bot.ultrasonicSensor.DISTANCE)
   log.dec()
 
   // status checks //
@@ -61,8 +61,10 @@ func loop() {
   // log.debug(strconv.Itoa(bot.gyroSensor.angle()))
   // log.debug("col left: " + strconv.Itoa(bot.colorSensorL.Intensity()) + ", col right: " + strconv.Itoa(bot.colorSensorR.Intensity()) + ", ultra dist: " + strconv.Itoa(bot.ultrasonicSensor.Distance()))
   // followLine()
-  gyroVal += bot.imu.ReadGyro()
-  log.trace(strconv.Itoa(gyroVal))
+  // gyroVal += bot.imu.ReadGyro()
+  // log.trace(strconv.Itoa(gyroVal))
+  log.debug(strconv.Itoa(bot.colorSensorL.RgbIntensity()))
+  // strconv.Itoa(bot.colorSensorL.Intensity())
   loop()
 }
 
