@@ -1,7 +1,5 @@
 package io
 
-var SENSOR_INIT_DELAY = 100
-
 const S1 = "spi0.1:S1"
 const S2 = "spi0.1:S2"
 const S3 = "spi0.1:S3"

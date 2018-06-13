@@ -35,6 +35,8 @@ func main() {
       setupInterrupt()
   log.dec()
 
+  time.Sleep(time.Millisecond * time.Duration(SENSOR_INIT_DELAY))
+
   // initial mode selections //
   log.inc(":mode")
     log.trace("setting sensor modes")

@@ -2,7 +2,6 @@ package io
 
 import "strings"
 import "errors"
-import "time"
 
 type Device struct {
   path string
@@ -74,8 +73,6 @@ func (device *ManualDevice) findDeviceFromPort() {
     portPath := LEGO_PORT + PORT[device.port] + "/"
     write(portPath + "mode", device.connection)
     write(portPath + "set_device", device.name)
-
-    time.Sleep(time.Millisecond * time.Duration(SENSOR_INIT_DELAY))
 
     files := list(device.path)
     foundDevice := false
