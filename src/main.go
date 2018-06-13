@@ -58,7 +58,6 @@ func main() {
 
 func loop() {
   time.Sleep(time.Second / time.Duration(LOOP_SPEED))
-  // log.trace("looping")
   // log.debug(strconv.Itoa(bot.gyroSensor.angle()))
   // log.debug("col left: " + strconv.Itoa(bot.colorSensorL.Intensity()) + ", col right: " + strconv.Itoa(bot.colorSensorR.Intensity()) + ", ultra dist: " + strconv.Itoa(bot.ultrasonicSensor.Distance()))
   // followLine()
