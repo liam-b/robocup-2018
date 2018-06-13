@@ -3,7 +3,6 @@ package main
 import "time"
 import "os/signal"
 import "os"
-// import "strconv"
 import "fmt"
 
 import "./io"
@@ -22,6 +21,8 @@ func main() {
       colorSensorR: io.ColorSensor{Port: io.S2}.New(),
       colorSensorL: io.ColorSensor{Port: io.S3}.New(),
       ultrasonicSensor: io.UltrasonicSensor{Port: io.S4}.New(),
+
+      imu: io.IMU{Address: 0x68}.New(),
 
       // motorL: Motor{Port: io.MC, Logger: log}.New(),
       // motorR: Motor{Port: io.MB, Logger: log}.New(),
@@ -46,16 +47,10 @@ func main() {
     batteryStatus()
   log.dec()
 
+  fmt.Println(bot.imu.GetByte(0x3F))
+
   log.info("looping")
   log.rep("loop")
-
-  i2c, _ := io.NewI2C(0x68, 1)
-  // if err != nil {log.fatal(err)}
-  defer i2c.Close()
-  res, _ := i2c.ReadRegU8(0x3F)
-  // if err != nil { log.Fatal(err) }
-  fmt.Println(res)
-
   loop()
 }
 
@@ -81,8 +76,8 @@ func setupInterrupt() {
 // exit function //
 func end(catch string) {
   log.set(":end")
-  log.notice("caught " + catch)
-  log.trace("exiting program")
+  log.trace("caught " + catch)
+  log.notice("exiting program")
   log.level = 0
 
   bot.motorL.Stop()

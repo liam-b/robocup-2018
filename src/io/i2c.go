@@ -32,7 +32,7 @@ func (v *I2C) write(buf []byte) (int, error) {
 }
 
 // Write sends buf to the remote i2c device. The interpretation of
-// the message is implementation dependant.
+// the message is implem entation dependant.
 func (v *I2C) WriteBytes(buf []byte) (int, error) {
 	// // lg.Debugf("Write %d hex bytes: [%+v]", len(buf), hex.EncodeToString(buf))
 	return v.write(buf)

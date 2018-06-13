@@ -9,6 +9,8 @@ type Bot struct {
   colorSensorR io.ColorSensor
   ultrasonicSensor io.UltrasonicSensor
 
+  imu io.IMU
+
   motorL io.Motor
   motorR io.Motor
 }
