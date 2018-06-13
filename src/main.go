@@ -10,6 +10,8 @@ import "./io"
 var log Logger = Logger{flag: "test", level: LOG_LEVEL}.New(":start")
 var bot Bot
 
+var gyroVal int = 0
+
 func main() {
   log.notice("program started")
 
@@ -56,10 +58,11 @@ func loop() {
   time.Sleep(time.Second / time.Duration(LOOP_SPEED))
   // log.trace("looping")
   // log.debug(strconv.Itoa(bot.gyroSensor.angle()))
-  // log.debug("col left: " + strconv.Itoa(bot.colorSensorL.intensity()) + ", col right: " + strconv.Itoa(bot.colorSensorR.intensity()) + ", ultra dist: " + strconv.Itoa(bot.ultrasonicSensor.distance()))
+  // log.debug("col left: " + strconv.Itoa(bot.colorSensorL.Intensity()) + ", col right: " + strconv.Itoa(bot.colorSensorR.Intensity()) + ", ultra dist: " + strconv.Itoa(bot.ultrasonicSensor.Distance()))
   // followLine()
   // printStatusWindow()
-  log.trace(strconv.Itoa(bot.imu.ReadGyro()))
+  gyroVal += bot.imu.ReadGyro()
+  log.trace(strconv.Itoa(gyroVal))
   loop()
 }
 

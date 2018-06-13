@@ -18,8 +18,9 @@ func (imu IMU) New() IMU {
 func (imu IMU) ReadGyro() int {
   gyroHigh, _ := imu.i2cDevice.ReadRegU8(GYRO_ZOUT_H)
   gyroLow, _ := imu.i2cDevice.ReadRegU8(GYRO_ZOUT_L)
+  gyroValue := int16(binary.BigEndian.Uint16([]byte{gyroHigh, gyroLow}))
 
-  return int(binary.BigEndian.Uint16([]byte{gyroHigh, gyroLow}))
+  return int(float64(gyroValue) / 300.0)
 }
 
 func (imu IMU) Cleanup() {
