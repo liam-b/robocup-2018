@@ -63,11 +63,11 @@ func (colorSensor ColorSensor) Color() int {
 }
 
 func (colorSensor ColorSensor) Rgb() (int, int, int) {
-  return colorSensor.sensor.value("0"), colorSensor.sensor.value("1"), colorSensor.sensor.value("2")
+  return colorSensor.sensor.value("0") / 10, colorSensor.sensor.value("1") / 10, colorSensor.sensor.value("2") / 10
 }
 
 func (colorSensor ColorSensor) RgbIntensity() int {
-  return (colorSensor.sensor.value("0") + colorSensor.sensor.value("1") + colorSensor.sensor.value("2")) / 3
+  return (colorSensor.sensor.value("0") + colorSensor.sensor.value("1") + colorSensor.sensor.value("2")) / 3 / 10
 }
 
 type UltrasonicSensor struct {
@@ -80,7 +80,6 @@ type UltrasonicSensor struct {
 
 func (ultrasonicSensor UltrasonicSensor) New() UltrasonicSensor {
   ultrasonicSensor.sensor = Sensor{Port: ultrasonicSensor.Port, connection: "ev3-uart", name: "lego-ev3-us"}.New()
-
   ultrasonicSensor.DISTANCE = "US-DIST-CM"
 
   return ultrasonicSensor
@@ -92,4 +91,27 @@ func (ultrasonicSensor UltrasonicSensor) Mode(newMode string) {
 
 func (ultrasonicSensor UltrasonicSensor) Distance() int {
   return ultrasonicSensor.sensor.value("0")
+}
+
+type ButtonSensor struct {
+  Port string
+
+  TOUCH string
+
+  sensor Sensor
+}
+
+func (buttonSensor ButtonSensor) New() ButtonSensor {
+  buttonSensor.sensor = Sensor{Port: buttonSensor.Port, connection: "ev3-uart", name: "lego-ev3-touch"}.New()
+  buttonSensor.TOUCH = "TOUCH"
+
+  return buttonSensor
+}
+
+func (buttonSensor ButtonSensor) Mode(newMode string) {
+  buttonSensor.sensor.mode(newMode)
+}
+
+func (buttonSensor ButtonSensor) Pressed() bool {
+  return buttonSensor.sensor.value("0") == 1
 }
