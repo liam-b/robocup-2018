@@ -62,7 +62,6 @@ func loop() {
   // log.debug(strconv.Itoa(bot.gyroSensor.angle()))
   // log.debug("col left: " + strconv.Itoa(bot.colorSensorL.Intensity()) + ", col right: " + strconv.Itoa(bot.colorSensorR.Intensity()) + ", ultra dist: " + strconv.Itoa(bot.ultrasonicSensor.Distance()))
   // followLine()
-  // printStatusWindow()
   gyroVal += bot.imu.ReadGyro()
   log.trace(strconv.Itoa(gyroVal))
   loop()
