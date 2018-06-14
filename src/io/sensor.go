@@ -102,7 +102,7 @@ type ButtonSensor struct {
 }
 
 func (buttonSensor ButtonSensor) New() ButtonSensor {
-  buttonSensor.sensor = Sensor{Port: buttonSensor.Port, connection: "ev3-uart", name: "lego-ev3-touch"}.New()
+  buttonSensor.sensor = Sensor{Port: buttonSensor.Port, connection: "ev3-analog", name: "lego-ev3-touch"}.New()
   buttonSensor.TOUCH = "TOUCH"
 
   return buttonSensor
