@@ -30,7 +30,8 @@ const ENABLED_PIXEL = 0x00
 const BATTERY_PIXEL = 0x01
 const SCOPE_STATUS_PIXEL = 0x02
 
-var COLOR_RED = [3]int{120, 0, 0}
+var COLOR_RED = [3]int{150, 0, 0}
 var COLOR_GREEN = [3]int{0, 120, 0}
-var COLOR_BLUE = [3]int{0, 0, 120}
-var COLOR_YELLOW = [3]int{200, 120, 0}
+var COLOR_BLUE = [3]int{0, 0, 150}
+var COLOR_YELLOW = [3]int{250, 200, 0}
+var COLOR_PURPLE = [3]int{150, 0, 150}

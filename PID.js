@@ -19,7 +19,7 @@ var derivative = 0;
 
 while(button) {
 
-  var Lightvalue = (bot.colorSensorR.intensity() + bot.colorSensorL.intensity()) / 2;
+  var Lightvalue = (bot.colorSensorRight.intensity() + bot.colorSensorLeft.intensity()) / 2;
   var error = Lightvalue - offset;
   integral = integral + error;
   derivative = error - lasterror;
@@ -30,11 +30,11 @@ while(button) {
 
   lasterror = error;
 
-  bot.motorR.runForever(25) // same with right and left
-  bot.motorL.runForever(25) // same with right and left
+  bot.motorRight.runForever(25) // same with right and left
+  bot.motorLeft.runForever(25) // same with right and left
 
   // INFITIE for now
-  if (bot.colorSensorR.intensity() = 90 && bot.colorSensorL.intensity() = 90) {
+  if (bot.colorSensorRight.intensity() = 90 && bot.colorSensorLeft.intensity() = 90) {
     break;
   };
 }

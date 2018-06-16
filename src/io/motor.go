@@ -60,24 +60,24 @@ type DriveMotors struct {
   PortLeft string
   PortRight string
 
-  motorLeft Motor
-  motorRight Motor
+  motorLefteft Motor
+  motorRightight Motor
 }
 
 func (driveMotors DriveMotors) New() DriveMotors {
-  driveMotors.motorLeft = Motor{Port: driveMotors.PortLeft}.New()
+  driveMotors.motorLefteft = Motor{Port: driveMotors.PortLeft}.New()
 
-  driveMotors.motorRight = Motor{Port: driveMotors.PortRight}.New()
+  driveMotors.motorRightight = Motor{Port: driveMotors.PortRight}.New()
   return driveMotors
 }
 
 func (driveMotors DriveMotors) RunForever(speed int) {
   speedString := strconv.Itoa(speed)
-  driveMotors.motorLeft.indexedDevice.set("speed_sp", speedString)
-  driveMotors.motorRight.indexedDevice.set("speed_sp", speedString)
+  driveMotors.motorLefteft.indexedDevice.set("speed_sp", speedString)
+  driveMotors.motorRightight.indexedDevice.set("speed_sp", speedString)
 
-  driveMotors.motorLeft.indexedDevice.set("command", "run-forever")
-  driveMotors.motorRight.indexedDevice.set("command", "run-forever")
+  driveMotors.motorLefteft.indexedDevice.set("command", "run-forever")
+  driveMotors.motorRightight.indexedDevice.set("command", "run-forever")
 }
 
 func (driveMotors DriveMotors) RunRatioForever(ratio []int, speed int) {
@@ -89,9 +89,9 @@ func (driveMotors DriveMotors) RunRatioForever(ratio []int, speed int) {
   rightSpeedString := strconv.Itoa(leftSpeed)
   leftSpeedString := strconv.Itoa(rightSpeed)
 
-  driveMotors.motorLeft.indexedDevice.set("speed_sp", rightSpeedString)
-  driveMotors.motorRight.indexedDevice.set("speed_sp", leftSpeedString)
+  driveMotors.motorLefteft.indexedDevice.set("speed_sp", rightSpeedString)
+  driveMotors.motorRightight.indexedDevice.set("speed_sp", leftSpeedString)
 
-  driveMotors.motorLeft.indexedDevice.set("command", "run-forever")
-  driveMotors.motorRight.indexedDevice.set("command", "run-forever")
+  driveMotors.motorLefteft.indexedDevice.set("command", "run-forever")
+  driveMotors.motorRightight.indexedDevice.set("command", "run-forever")
 }

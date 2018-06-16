@@ -4,15 +4,15 @@ import "./io"
 
 type Bot struct {
   battery io.Battery
-  colorSensorL io.ColorSensor
-  colorSensorR io.ColorSensor
+  colorSensorLeft io.ColorSensor
+  colorSensorRight io.ColorSensor
   ultrasonicSensor io.UltrasonicSensor
 
   imu io.IMU
   ledshim io.Ledshim
 
-  motorL io.Motor
-  motorR io.Motor
+  motorLeft io.Motor
+  motorRight io.Motor
 }
 
 func (bot Bot) new() Bot {
@@ -26,7 +26,7 @@ func batteryStatus() {
 
     if (currentVoltage > 125) {
       log.warn("possible overvolting")
-    } else if (currentVoltage < 100) {
+    } else if (currentVoltage < 105) {
       log.error("replace battery now")
       bot.ledshim.SetPixel(io.BATTERY_PIXEL, io.COLOR_RED)
     } else if (currentVoltage < 110) {
