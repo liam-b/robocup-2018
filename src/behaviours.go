@@ -1,4 +1,4 @@
-package behaviour
+package main
 
 func FollowLine() {
   intensityL := bot.colorSensorL.Intensity()

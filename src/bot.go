@@ -10,6 +10,7 @@ type Bot struct {
   ultrasonicSensor io.UltrasonicSensor
 
   imu io.IMU
+  ledshim io.Ledshim
 
   motorL io.Motor
   motorR io.Motor
