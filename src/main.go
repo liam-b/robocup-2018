@@ -4,7 +4,6 @@ import "time"
 import "os/signal"
 import "os"
 import "strconv"
-// import "fmt"
 
 import "./io"
 
@@ -16,7 +15,6 @@ var gyroVal int = 0
 func main() {
   log.notice("program started")
 
-  // setup the robot //
   log.inc(":setup")
     log.debug("setting up io")
     bot = Bot{
@@ -32,6 +30,8 @@ func main() {
       // motorR: Motor{Port: io.MB, Logger: log}.New(),
     }
 
+    bot.ledshim.SetPixel(io.ENABLED_PIXEL, io.COLOR_GREEN)
+
     log.once(".interrupt")
       log.trace("setting up interrupts")
       setupInterrupt()
@@ -39,7 +39,6 @@ func main() {
 
   time.Sleep(time.Millisecond * time.Duration(SENSOR_INIT_DELAY))
 
-  // initial mode selections //
   log.inc(":mode")
     log.trace("setting sensor modes")
     bot.colorSensorL.Mode(bot.colorSensorL.RGB)
@@ -47,19 +46,15 @@ func main() {
     bot.ultrasonicSensor.Mode(bot.ultrasonicSensor.DISTANCE)
   log.dec()
 
-  // status checks //
   log.inc(":status")
     log.info("checking status")
     batteryStatus()
   log.dec()
 
-  for index := 0; index < 28; index++ {
-    bot.ledshim.SetPixel(index, index * 5, 0, 0)
-    bot.ledshim.Show()
-    time.Sleep(time.Millisecond * time.Duration(80))
-  }
-  // bot.ledshim.Buffer[0] = [4]int{150, 150, 150, 0}
+  bot.ledshim.SetPixel(io.SCOPE_STATUS_PIXEL, io.COLOR_YELLOW)
+  time.Sleep(time.Millisecond * time.Duration(START_LOOP_DELAY))
 
+  bot.ledshim.SetPixel(io.SCOPE_STATUS_PIXEL, io.COLOR_GREEN)
   log.info("looping")
   log.rep("loop")
   loop()
@@ -67,15 +62,7 @@ func main() {
 
 func loop() {
   time.Sleep(time.Second / time.Duration(LOOP_SPEED))
-  // log.debug("col left: " + strconv.Itoa(bot.colorSensorL.Intensity()) + ", col right: " + strconv.Itoa(bot.colorSensorR.Intensity()) + ", ultra dist: " + strconv.Itoa(bot.ultrasonicSensor.Distance()))
-  // followLine()
-  // gyroVal += bot.imu.ReadGyro()
-  // log.trace(strconv.Itoa(gyroVal))
-  // log.debug("t: " + strconv.Itoa(total) + ", r: " + strconv.Itoa(red) + ", g: " + strconv.Itoa(green) + ", b: " + strconv.Itoa(blue))
-
   findColor()
-  // strconv.Itoa(bot.colorSensorL.Intensity())
-
   loop()
 }
 
@@ -109,8 +96,8 @@ func setupInterrupt() {
   }()
 }
 
-// exit function //
 func end(catch string) {
+  bot.ledshim.SetPixel(io.SCOPE_STATUS_PIXEL, io.COLOR_RED)
   log.set(":end")
   log.trace("caught " + catch)
   log.notice("exiting program")
@@ -120,5 +107,7 @@ func end(catch string) {
   // bot.motorR.Stop()
   bot.imu.Cleanup()
 
+  time.Sleep(time.Millisecond * time.Duration(END_DELAY))
+  bot.ledshim.Clear()
   os.Exit(0)
 }

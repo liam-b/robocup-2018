@@ -25,3 +25,12 @@ const MOTOR_PATH = "/sys/class/tacho-motor/"
 const SENSOR_PATH = "/sys/class/lego-sensor/"
 const BATTERY_PATH = "/sys/class/power_supply/brickpi3-battery/"
 const LEGO_PORT = "/sys/class/lego-port/"
+
+const ENABLED_PIXEL = 0x00
+const BATTERY_PIXEL = 0x01
+const SCOPE_STATUS_PIXEL = 0x02
+
+var COLOR_RED = [3]int{120, 0, 0}
+var COLOR_GREEN = [3]int{0, 120, 0}
+var COLOR_BLUE = [3]int{0, 0, 120}
+var COLOR_YELLOW = [3]int{200, 120, 0}
