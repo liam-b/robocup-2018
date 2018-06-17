@@ -2,6 +2,7 @@ package io
 
 import "strconv"
 import "strings"
+import "fmt"
 
 type Sensor struct {
   Port string
@@ -70,19 +71,19 @@ func (colorSensor ColorSensor) Mode(newMode string) {
   colorSensor.sensor.mode(newMode)
 }
 
-func (colorSensor ColorSensor) Intensity() int {
+func (colorSensor *ColorSensor) Intensity() int {
   return colorSensor.sensor.value(0)
 }
 
-func (colorSensor ColorSensor) Color() int {
+func (colorSensor *ColorSensor) Color() int {
   return colorSensor.sensor.value(0)
 }
 
-func (colorSensor ColorSensor) Rgb() (int, int, int) {
+func (colorSensor *ColorSensor) Rgb() (int, int, int) {
   return colorSensor.sensor.value(0) / 10, colorSensor.sensor.value(1) / 10, colorSensor.sensor.value(2) / 10
 }
 
-func (colorSensor ColorSensor) RgbIntensity() int {
+func (colorSensor *ColorSensor) RgbIntensity() int {
   return (colorSensor.sensor.value(0) + colorSensor.sensor.value(1) + colorSensor.sensor.value(2)) / 3 / 10
 }
 
@@ -109,7 +110,7 @@ func (ultrasonicSensor UltrasonicSensor) Mode(newMode string) {
   ultrasonicSensor.sensor.mode(newMode)
 }
 
-func (ultrasonicSensor UltrasonicSensor) Distance() int {
+func (ultrasonicSensor *UltrasonicSensor) Distance() int {
   return ultrasonicSensor.sensor.value(0)
 }
 
@@ -136,6 +137,6 @@ func (touchSensor TouchSensor) Mode(newMode string) {
   touchSensor.sensor.mode(newMode)
 }
 
-func (touchSensor TouchSensor) Pressed() bool {
+func (touchSensor *TouchSensor) Pressed() bool {
   return touchSensor.sensor.value(0) == 1
 }

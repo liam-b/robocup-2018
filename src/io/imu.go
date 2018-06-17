@@ -36,7 +36,7 @@ func (imu IMU) Cleanup() {
   imu.i2cDevice.Close()
 }
 
-func (imu IMU) getGyroValue() int {
+func (imu *IMU) getGyroValue() int {
   gyroHigh, _ := imu.i2cDevice.ReadRegU8(GYRO_ZOUT_H)
   gyroLow, _ := imu.i2cDevice.ReadRegU8(GYRO_ZOUT_L)
   gyroValue := int16(binary.BigEndian.Uint16([]byte{gyroHigh, gyroLow}))

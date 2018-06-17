@@ -62,15 +62,13 @@ func main() {
 }
 
 func loop() {
+  bot.ResetAllCaches()
   time.Sleep(time.Second / time.Duration(LOOP_SPEED))
 
   leftColor, rightColor := findColors()
   fmt.Println("left: " + leftColor + ", right: " + rightColor)
 
-  if LOOPING {
-    bot.ResetAllCaches()
-    loop()
-  }
+  if LOOPING { loop() }
 }
 
 func setupInterrupt() {
@@ -90,12 +88,11 @@ func end(catch string) {
   log.notice("exiting program")
   log.level = 0
 
-  time.Sleep(time.Millisecond * time.Duration(END_DELAY))
-
   // bot.motorLeft.Stop()
   // bot.motorRight.Stop()
   bot.imu.Cleanup()
   bot.ledshim.Clear()
 
+  time.Sleep(time.Millisecond * time.Duration(END_DELAY))
   os.Exit(0)
 }

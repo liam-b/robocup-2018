@@ -21,7 +21,7 @@ func (battery *Battery) ResetCache() {
   battery.hasCached = false
 }
 
-func (battery Battery) VoltageString() string {
+func (battery *Battery) VoltageString() string {
   voltage := battery.getVoltage()
   voltageString := string(voltage[0:len(voltage) - 6])
   if (len(voltageString) > 2) {
@@ -31,7 +31,7 @@ func (battery Battery) VoltageString() string {
   }
 }
 
-func (battery Battery) Voltage() int {
+func (battery *Battery) Voltage() int {
   voltage := battery.getVoltage()
   output := string(voltage[0:len(voltage) - 6])
   value, _ := strconv.Atoi(output)
