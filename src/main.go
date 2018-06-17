@@ -23,12 +23,12 @@ func main() {
       colorSensorRight: io.ColorSensor{Port: io.S2}.New(),
       colorSensorLeft: io.ColorSensor{Port: io.S3}.New(),
       ultrasonicSensor: io.UltrasonicSensor{Port: io.S4}.New(),
-
       imu: io.IMU{Address: 0x68}.New(),
-      ledshim: io.Ledshim{Address: 0x75}.New(),
 
       // motorLeft: Motor{Port: io.MC, Logger: log}.New(),
       // motorRight: Motor{Port: io.MB, Logger: log}.New(),
+
+      ledshim: io.Ledshim{Address: 0x75}.New(),
     }
 
     bot.ledshim.SetPixel(io.ENABLED_PIXEL, io.COLOR_GREEN)
@@ -67,7 +67,10 @@ func loop() {
   leftColor, rightColor := findColors()
   fmt.Println("left: " + leftColor + ", right: " + rightColor)
 
-  loop()
+  if LOOPING {
+    bot.ResetAllCaches()
+    loop()
+  }
 }
 
 func setupInterrupt() {
@@ -80,6 +83,7 @@ func setupInterrupt() {
 }
 
 func end(catch string) {
+  LOOPING = false
   bot.ledshim.SetPixel(io.SCOPE_STATUS_PIXEL, io.COLOR_RED)
   log.set(":end")
   log.trace("caught " + catch)

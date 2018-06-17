@@ -7,16 +7,23 @@ type Bot struct {
   colorSensorLeft io.ColorSensor
   colorSensorRight io.ColorSensor
   ultrasonicSensor io.UltrasonicSensor
-
   imu io.IMU
-  ledshim io.Ledshim
 
   motorLeft io.Motor
   motorRight io.Motor
+
+  ledshim io.Ledshim
 }
 
-func (bot Bot) new() Bot {
-  return bot
+func (bot Bot) ResetAllCaches()() {
+  bot.battery.ResetCache()
+  bot.colorSensorLeft.ResetCache()
+  bot.colorSensorRight.ResetCache()
+  bot.ultrasonicSensor.ResetCache()
+  bot.imu.ResetCache()
+
+  // bot.motorLeft.ResetCache()
+  // bot.motorRight.ResetCache()
 }
 
 func batteryStatus() {

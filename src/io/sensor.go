@@ -9,6 +9,9 @@ type Sensor struct {
   connection string
   name string
 
+  cachedValues [8]int
+  hasCached [8]bool
+
   manualDevice ManualDevice
 }
 
@@ -19,10 +22,19 @@ func (sensor Sensor) New() Sensor {
   return sensor
 }
 
-func (sensor Sensor) value(num string) int {
-  value := sensor.manualDevice.get("value" + num)
+func (sensor *Sensor) resetCache() {
+  sensor.cachedValues = [8]int{0, 0, 0, 0, 0, 0, 0, 0}
+  sensor.hasCached = [8]bool{false, false, false, false, false, false, false, false}
+}
+
+func (sensor *Sensor) value(num int) int {
+  if sensor.hasCached[num] { return sensor.cachedValues[num] }
+  value := sensor.manualDevice.get("value" + strconv.Itoa(num))
   value = strings.TrimSuffix(value, "\n")
   result, _ := strconv.Atoi(value)
+  sensor.cachedValues[num] = result
+  sensor.hasCached[num] = true
+
   return result
 }
 
@@ -50,24 +62,28 @@ func (colorSensor ColorSensor) New() ColorSensor {
   return colorSensor
 }
 
+func (colorSensor *ColorSensor) ResetCache() {
+  colorSensor.sensor.resetCache()
+}
+
 func (colorSensor ColorSensor) Mode(newMode string) {
   colorSensor.sensor.mode(newMode)
 }
 
 func (colorSensor ColorSensor) Intensity() int {
-  return colorSensor.sensor.value("0")
+  return colorSensor.sensor.value(0)
 }
 
 func (colorSensor ColorSensor) Color() int {
-  return colorSensor.sensor.value("0")
+  return colorSensor.sensor.value(0)
 }
 
 func (colorSensor ColorSensor) Rgb() (int, int, int) {
-  return colorSensor.sensor.value("0") / 10, colorSensor.sensor.value("1") / 10, colorSensor.sensor.value("2") / 10
+  return colorSensor.sensor.value(0) / 10, colorSensor.sensor.value(1) / 10, colorSensor.sensor.value(2) / 10
 }
 
 func (colorSensor ColorSensor) RgbIntensity() int {
-  return (colorSensor.sensor.value("0") + colorSensor.sensor.value("1") + colorSensor.sensor.value("2")) / 3 / 10
+  return (colorSensor.sensor.value(0) + colorSensor.sensor.value(1) + colorSensor.sensor.value(2)) / 3 / 10
 }
 
 type UltrasonicSensor struct {
@@ -85,15 +101,19 @@ func (ultrasonicSensor UltrasonicSensor) New() UltrasonicSensor {
   return ultrasonicSensor
 }
 
+func (ultrasonicSensor *UltrasonicSensor) ResetCache() {
+  ultrasonicSensor.sensor.resetCache()
+}
+
 func (ultrasonicSensor UltrasonicSensor) Mode(newMode string) {
   ultrasonicSensor.sensor.mode(newMode)
 }
 
 func (ultrasonicSensor UltrasonicSensor) Distance() int {
-  return ultrasonicSensor.sensor.value("0")
+  return ultrasonicSensor.sensor.value(0)
 }
 
-type ButtonSensor struct {
+type TouchSensor struct {
   Port string
 
   TOUCH string
@@ -101,17 +121,21 @@ type ButtonSensor struct {
   sensor Sensor
 }
 
-func (buttonSensor ButtonSensor) New() ButtonSensor {
-  buttonSensor.sensor = Sensor{Port: buttonSensor.Port, connection: "ev3-analog", name: "lego-ev3-touch"}.New()
-  buttonSensor.TOUCH = "TOUCH"
+func (touchSensor TouchSensor) New() TouchSensor {
+  touchSensor.sensor = Sensor{Port: touchSensor.Port, connection: "ev3-analog", name: "lego-ev3-touch"}.New()
+  touchSensor.TOUCH = "TOUCH"
 
-  return buttonSensor
+  return touchSensor
 }
 
-func (buttonSensor ButtonSensor) Mode(newMode string) {
-  buttonSensor.sensor.mode(newMode)
+func (touchSensor *TouchSensor) ResetCache() {
+  touchSensor.sensor.resetCache()
 }
 
-func (buttonSensor ButtonSensor) Pressed() bool {
-  return buttonSensor.sensor.value("0") == 1
+func (touchSensor TouchSensor) Mode(newMode string) {
+  touchSensor.sensor.mode(newMode)
+}
+
+func (touchSensor TouchSensor) Pressed() bool {
+  return touchSensor.sensor.value(0) == 1
 }
