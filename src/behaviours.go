@@ -1,34 +1,15 @@
 package main
 
-func findColors() (string, string) {
-  leftRed, leftGreen, leftBlue := bot.colorSensorLeft.Rgb()
-  leftTotal := int((leftRed + leftGreen + leftBlue) / 3)
-  leftColor := WHITE
+import "strings"
 
-  if (leftTotal > 45) {
-    leftColor = SILVER
-  } else if (leftGreen > leftBlue + 6 && leftGreen > leftRed + 6) {
-    leftColor = GREEN
-  } else if (leftTotal < 6) {
-    leftColor = BLACK
-  }
+func Behave() {
+  if !mode("water_tower") && DetectedWaterTower(WATER_TOWER_DETECT_DISTANCE, WATER_TOWER_DETECT_COUNT) { MODE = "water_tower" }
 
-  rightRed, rightGreen, rightBlue := bot.colorSensorRight.Rgb()
-  rightTotal := int((rightRed + rightGreen + rightBlue) / 3)
-  rightColor := WHITE
-
-  if (rightTotal > 45) {
-    rightColor = SILVER
-  } else if (rightGreen > rightBlue + 6 && rightGreen > rightRed + 6) {
-    rightColor = GREEN
-  } else if (rightTotal < 6) {
-    rightColor = BLACK
-  }
-
-  return leftColor, rightColor
+  if mode("water_tower") { MODE = AvoidWaterTower() }
+  if mode("follow_line") { MODE = FollowLine() }
 }
 
-func FollowLine() {
+func FollowLine() string {
   intensityL := bot.colorSensorLeft.Intensity()
   intensityR := bot.colorSensorRight.Intensity()
 
@@ -56,4 +37,36 @@ func FollowLine() {
     go bot.motorRight.RunForever(300)
     go bot.motorLeft.RunForever(300)
   }
+
+  return MODE
+}
+
+var verifyAttempts = 0
+
+func AvoidWaterTower() string {
+  if MODE == "water_tower" {
+    log.debug("start moving forwards")
+    verifyAttempts = 0
+    return "water_tower:verify"
+  }
+
+  if MODE == "water_tower:verify" {
+    log.debug("verifying water tower")
+    if (DetectedWaterTower(WATER_TOWER_VERIFY_DISTANCE, WATER_TOWER_VERIFY_COUNT)) {
+      log.debug("stopping motors, verified water tower")
+      return "water_tower:avoid"
+    } else {
+      verifyAttempts += 1
+      if verifyAttempts > WATER_TOWER_VERIFY_ATTEMPTS {
+        log.debug("stopping motors, lost water tower")
+        return "follow_line"
+      }
+    }
+  }
+
+  return MODE
+}
+
+func mode(mode string) bool {
+  return strings.Contains(MODE, mode)
 }

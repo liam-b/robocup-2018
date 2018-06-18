@@ -3,13 +3,21 @@ package main
 var LOG_LEVEL = 7
 
 var LOOPING = true
-var LOOP_SPEED = 1
+var LOOP_SPEED = 25
 var SENSOR_INIT_DELAY = 200
 var START_LOOP_DELAY = 300
-var END_DELAY = 300
+var END_DELAY = 400
 
 var NONE = "none"
 var BLACK = "black"
 var WHITE = "white"
 var SILVER = "silver"
 var GREEN = "green"
+
+var MODE = "none"
+
+var WATER_TOWER_DETECT_DISTANCE = 850
+var WATER_TOWER_DETECT_COUNT = 4
+var WATER_TOWER_VERIFY_DISTANCE = 880
+var WATER_TOWER_VERIFY_COUNT = 2
+var WATER_TOWER_VERIFY_ATTEMPTS = 20

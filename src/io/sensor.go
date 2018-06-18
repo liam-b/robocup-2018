@@ -2,7 +2,6 @@ package io
 
 import "strconv"
 import "strings"
-import "fmt"
 
 type Sensor struct {
   Port string
@@ -45,7 +44,6 @@ func (sensor Sensor) mode(newMode string) {
 
 type ColorSensor struct {
   Port string
-
   REFLECT string
   COLOR string
   RGB string
@@ -55,11 +53,9 @@ type ColorSensor struct {
 
 func (colorSensor ColorSensor) New() ColorSensor {
   colorSensor.sensor = Sensor{Port: colorSensor.Port, connection: "ev3-uart", name: "lego-ev3-color"}.New()
-
   colorSensor.REFLECT = "COL-REFLECT"
   colorSensor.COLOR = "COL-COLOR"
   colorSensor.RGB = "RGB-RAW"
-
   return colorSensor
 }
 
@@ -89,7 +85,6 @@ func (colorSensor *ColorSensor) RgbIntensity() int {
 
 type UltrasonicSensor struct {
   Port string
-
   DISTANCE string
 
   sensor Sensor
@@ -98,7 +93,6 @@ type UltrasonicSensor struct {
 func (ultrasonicSensor UltrasonicSensor) New() UltrasonicSensor {
   ultrasonicSensor.sensor = Sensor{Port: ultrasonicSensor.Port, connection: "ev3-uart", name: "lego-ev3-us"}.New()
   ultrasonicSensor.DISTANCE = "US-DIST-CM"
-
   return ultrasonicSensor
 }
 
@@ -111,12 +105,11 @@ func (ultrasonicSensor UltrasonicSensor) Mode(newMode string) {
 }
 
 func (ultrasonicSensor *UltrasonicSensor) Distance() int {
-  return ultrasonicSensor.sensor.value(0)
+  return int(ultrasonicSensor.sensor.value(0))
 }
 
 type TouchSensor struct {
   Port string
-
   TOUCH string
 
   sensor Sensor
@@ -125,7 +118,6 @@ type TouchSensor struct {
 func (touchSensor TouchSensor) New() TouchSensor {
   touchSensor.sensor = Sensor{Port: touchSensor.Port, connection: "ev3-analog", name: "lego-ev3-touch"}.New()
   touchSensor.TOUCH = "TOUCH"
-
   return touchSensor
 }
 

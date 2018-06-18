@@ -4,14 +4,12 @@ import "time"
 import "os/signal"
 import "os"
 // import "strconv"
-import "fmt"
+// import "fmt"
 
 import "./io"
 
 var log Logger = Logger{flag: "test", level: LOG_LEVEL}.New(":start")
 var bot Bot
-
-var gyroVal int = 0
 
 func main() {
   log.notice("program started")
@@ -35,7 +33,7 @@ func main() {
 
     log.once(".interrupt")
       log.trace("setting up interrupts")
-      setupInterrupt()
+      SetupInterrupts()
   log.dec()
 
   time.Sleep(time.Millisecond * time.Duration(SENSOR_INIT_DELAY))
@@ -52,10 +50,12 @@ func main() {
     batteryStatus()
   log.dec()
 
-  bot.ledshim.SetPixel(io.SCOPE_STATUS_PIXEL, io.COLOR_BLUE)
+  bot.ledshim.SetPixel(io.SCOPE_PIXEL, io.COLOR_BLUE)
   time.Sleep(time.Millisecond * time.Duration(START_LOOP_DELAY))
 
-  bot.ledshim.SetPixel(io.SCOPE_STATUS_PIXEL, io.COLOR_GREEN)
+  bot.ledshim.SetPixel(io.BEHAVIOUR_PIXEL, io.COLOR_WHITE)
+
+  bot.ledshim.SetPixel(io.SCOPE_PIXEL, io.COLOR_GREEN)
   log.info("looping")
   log.rep("loop")
   loop()
@@ -65,13 +65,12 @@ func loop() {
   bot.ResetAllCaches()
   time.Sleep(time.Second / time.Duration(LOOP_SPEED))
 
-  leftColor, rightColor := findColors()
-  fmt.Println("left: " + leftColor + ", right: " + rightColor)
+  Behave()
 
   if LOOPING { loop() }
 }
 
-func setupInterrupt() {
+func SetupInterrupts() {
   stop := make(chan os.Signal, 1)
   signal.Notify(stop, os.Interrupt)
   go func() {
@@ -82,17 +81,19 @@ func setupInterrupt() {
 
 func end(catch string) {
   LOOPING = false
-  bot.ledshim.SetPixel(io.SCOPE_STATUS_PIXEL, io.COLOR_RED)
+  bot.ledshim.SetPixel(io.SCOPE_PIXEL, io.COLOR_RED)
   log.set(":end")
   log.trace("caught " + catch)
   log.notice("exiting program")
   log.level = 0
+
+  time.Sleep(time.Millisecond * time.Duration(END_DELAY))
 
   // bot.motorLeft.Stop()
   // bot.motorRight.Stop()
   bot.imu.Cleanup()
   bot.ledshim.Clear()
 
-  time.Sleep(time.Millisecond * time.Duration(END_DELAY))
-  os.Exit(0)
+  // time.Sleep(time.Millisecond * time.Duration(END_DELAY))
+  // os.Exit(0)
 }
