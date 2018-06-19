@@ -1,11 +1,8 @@
 package main
 
-var waterTowerMatches = 0
-var detectedWaterTowers = 0
-
 func GetColors() (string, string) {
   leftRed, leftGreen, leftBlue := bot.colorSensorLeft.Rgb()
-  leftTotal := int((leftRed + leftGreen + leftBlue) / 3)
+  leftTotal := bot.colorSensorLeft.RgbIntensity()
   leftColor := WHITE
 
   if (leftTotal > 45) {
@@ -31,6 +28,26 @@ func GetColors() (string, string) {
   return leftColor, rightColor
 }
 
+func DetectedSilver() bool {
+  left, right := GetColors()
+  return left == SILVER && right == SILVER
+}
+
+func DetectedGreen(sensor int) bool {
+  red, green, blue := 0, 0, 0
+
+  if sensor == LEFT {
+    red, green, blue = bot.colorSensorLeft.Rgb()
+  }
+  if sensor == RIGHT {
+    red, green, blue = bot.colorSensorRight.Rgb()
+  }
+
+  return green > blue + GREEN_DETECT_RGB_DIFFERENCE && green > red + GREEN_DETECT_RGB_DIFFERENCE
+}
+
+var waterTowerMatches = 0
+
 func DetectedWaterTower(distance int, count int) bool {
   value := int(float64(2550 - bot.ultrasonicSensor.Distance()) / 2.55)
 
@@ -40,5 +57,27 @@ func DetectedWaterTower(distance int, count int) bool {
     waterTowerMatches = 0
   }
 
-  return waterTowerMatches > count
+  if waterTowerMatches > count {
+    waterTowerMatches = 0
+    return true
+  }
+  return false
+}
+
+var totalAngle = 0
+
+func GyroAtAngle(angle int, turnDirection int) bool {
+  totalAngle += bot.imu.ReadGyro()
+
+  if turnDirection == LEFT && totalAngle > angle {
+    totalAngle = 0
+    return true
+  }
+
+  if turnDirection == RIGHT && totalAngle < angle {
+    totalAngle = 0
+    return true
+  }
+
+  return false
 }

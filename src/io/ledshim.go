@@ -2,7 +2,7 @@ package io
 
 import "time"
 
-const MODE_REGISTER = 0x00
+const BEHAVIOUR_REGISTER = 0x00
 const FRAME_REGISTER = 0x01
 const AUTOPLAY1_REGISTER = 0x02
 const AUTOPLAY2_REGISTER = 0x03
@@ -17,9 +17,9 @@ const ADC_REGISTER = 0x0c
 const CONFIG_BANK = 0x0b
 const BANK_ADDRESS = 0xfd
 
-const PICTURE_MODE = 0x00
-const AUTOPLAY_MODE = 0x08
-const AUDIOPLAY_MODE = 0x18
+const PICTURE_BEHAVIOUR = 0x00
+const AUTOPLAY_BEHAVIOUR = 0x08
+const AUDIOPLAY_BEHAVIOUR = 0x18
 
 const ENABLE_OFFSET = 0x00
 const BLINK_OFFSET = 0x12
@@ -70,24 +70,19 @@ func (ledshim Ledshim) New() Ledshim {
   return ledshim
 }
 
-func (ledshim Ledshim) Clear() {
+func (ledshim *Ledshim) Clear() {
   for x := 0; x < ledshim.width; x++ {
-    ledshim.Buffer[x] = [4]int{0, 0, 0, 0}
+    ledshim.BufferPixel(x, 0, 0, 0)
   }
   ledshim.Show()
 }
 
 func (ledshim *Ledshim) SetPixel(x int, color [3]int) {
-  ledshim.BufferPixel(x, color[0], color[1], color[2])
-  // ledshim.Show()
-  ledshim.ShowIndividual(x)
+  if ledshim.Buffer[x] != [4]int{color[0], color[1], color[2], 0} {
+    ledshim.Buffer[x] = [4]int{color[0], color[1], color[2], 0}
+    ledshim.ShowIndividual(x)
+  }
 }
-
-// func (ledshim *Ledshim) SetPixel(x int, red int, green int, blue int) {
-//   ledshim.BufferPixel(x, red, green, blue)
-//   // ledshim.Show()
-//   ledshim.ShowIndividual(x)
-// }
 
 func (ledshim *Ledshim) BufferPixel(x int, red int, green int, blue int) {
   ledshim.Buffer[x] = [4]int{red, green, blue, 0}
@@ -171,7 +166,7 @@ func (ledshim Ledshim) pixelAddress(x int, y int) int {
 
 func (ledshim Ledshim) setup() {
   ledshim.i2cDevice.WriteRegU8(BANK_ADDRESS, CONFIG_BANK)
-  ledshim.i2cDevice.WriteRegU8(MODE_REGISTER, PICTURE_MODE)
+  ledshim.i2cDevice.WriteRegU8(BEHAVIOUR_REGISTER, PICTURE_BEHAVIOUR)
   ledshim.i2cDevice.WriteRegU8(AUDIOSYNC_REGISTER, 0x00)
   ledshim.i2cDevice.WriteRegU8(BANK_ADDRESS, 0x01)
   ledshim.enableLeds()

@@ -3,7 +3,7 @@ package main
 import "time"
 import "os/signal"
 import "os"
-// import "strconv"
+import "strconv"
 // import "fmt"
 
 import "./io"
@@ -23,13 +23,14 @@ func main() {
       ultrasonicSensor: io.UltrasonicSensor{Port: io.S4}.New(),
       imu: io.IMU{Address: 0x68}.New(),
 
-      // motorLeft: Motor{Port: io.MC, Logger: log}.New(),
-      // motorRight: Motor{Port: io.MB, Logger: log}.New(),
+      motorLeft: io.Motor{Port: io.MC}.New(),
+      motorRight: io.Motor{Port: io.MB}.New(),
 
       ledshim: io.Ledshim{Address: 0x75}.New(),
     }
 
     bot.ledshim.SetPixel(io.ENABLED_PIXEL, io.COLOR_GREEN)
+    bot.ledshim.SetPixel(io.SCOPE_PIXEL, io.COLOR_BLUE)
 
     log.once(".interrupt")
       log.trace("setting up interrupts")
@@ -50,50 +51,54 @@ func main() {
     batteryStatus()
   log.dec()
 
-  bot.ledshim.SetPixel(io.SCOPE_PIXEL, io.COLOR_BLUE)
   time.Sleep(time.Millisecond * time.Duration(START_LOOP_DELAY))
-
-  bot.ledshim.SetPixel(io.BEHAVIOUR_PIXEL, io.COLOR_WHITE)
-
   bot.ledshim.SetPixel(io.SCOPE_PIXEL, io.COLOR_GREEN)
+  BEHAVIOUR = "follow_line"
   log.info("looping")
   log.rep("loop")
   loop()
 }
 
 func loop() {
-  bot.ResetAllCaches()
-  time.Sleep(time.Second / time.Duration(LOOP_SPEED))
+  if LOOPING {
+    bot.ResetAllCaches()
+    time.Sleep(time.Second / time.Duration(LOOP_SPEED))
 
-  Behave()
+    Behave()
+    // FollowLine(true, true)
+    // log.debug(BEHAVIOUR + ", " + strconv.Itoa(int(float64(2550 - bot.ultrasonicSensor.Distance()) / 2.55)))
+    log.debug(BEHAVIOUR + ", " + strconv.Itoa(totalAngle))
+    // log.trace("L: " + strconv.Itoa(bot.colorSensorLeft.RgbIntensity()) + " R: " + strconv.Itoa(bot.colorSensorRight.RgbIntensity()))
 
-  if LOOPING { loop() }
+    // log.debug(strconv.FormatBool(DetectedGreen(LEFT)))
+  }
+
+  loop()
 }
 
 func SetupInterrupts() {
   stop := make(chan os.Signal, 1)
   signal.Notify(stop, os.Interrupt)
   go func() {
-    <- stop
+    <-stop
+    LOOPING = false
     end("ctrl-c")
   }()
 }
 
 func end(catch string) {
-  LOOPING = false
   bot.ledshim.SetPixel(io.SCOPE_PIXEL, io.COLOR_RED)
   log.set(":end")
-  log.trace("caught " + catch)
+  log.trace("caught " + log.value(catch))
   log.notice("exiting program")
   log.level = 0
 
   time.Sleep(time.Millisecond * time.Duration(END_DELAY))
 
-  // bot.motorLeft.Stop()
-  // bot.motorRight.Stop()
+  bot.motorLeft.Stop()
+  bot.motorRight.Stop()
   bot.imu.Cleanup()
   bot.ledshim.Clear()
 
-  // time.Sleep(time.Millisecond * time.Duration(END_DELAY))
-  // os.Exit(0)
+  os.Exit(0)
 }
