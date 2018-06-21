@@ -1,71 +1,112 @@
 package main
 
 import "strings"
-
 import "./io"
 
+var behavioursFunctions = map[string]func()string{
+  "chemical_spill": SaveCan,
+  "water_tower": AvoidWaterTower,
+  "turn_green": TurnOnGreen,
+  "follow_line": FollowLine}
+
+var behaviourLeds = map[string][3]int{
+  "chemical_spill": io.COLOR_BLUE,
+  "water_tower": io.COLOR_RED,
+  "turn_green": io.COLOR_GREEN,
+  "follow_line": io.COLOR_WHITE}
+
 func Behave() {
-  if BEHAVIOUR == "follow_line" && DO_GREEN_TURN && DetectedGreen(LEFT) { BEHAVIOUR = "turn_green:left" }
-  if BEHAVIOUR == "follow_line" && DO_GREEN_TURN && DetectedGreen(RIGHT) { BEHAVIOUR = "turn_green:right" }
-  if BEHAVIOUR == "follow_line" && DO_WATER_TOWER && DetectedWaterTower(WATER_TOWER_DETECT_DISTANCE, WATER_TOWER_DETECT_COUNT) { BEHAVIOUR = "water_tower:start" }
-  // if BEHAVIOUR == "follow_line" && DO_CHEMICAL_SPILL && DetectedSilver() { BEHAVIOUR = "chemical_spill:verify" }
+  if BEHAVIOUR == "follow_line" {
+    if DO_GREEN_TURN && DetectedGreen(LEFT) { BEHAVIOUR = "turn_green:left" }
+    if DO_GREEN_TURN && DetectedGreen(RIGHT) { BEHAVIOUR = "turn_green:right" }
+    if DO_WATER_TOWER && DetectedWaterTower(WATER_TOWER_DETECT_DISTANCE, WATER_TOWER_DETECT_COUNT) { BEHAVIOUR = "water_tower:start" }
+    if DO_CHEMICAL_SPILL && DetectedSilver() { BEHAVIOUR = "chemical_spill:start" }
+  }
 
-  // if modeContains("chemical_spill") { BEHAVIOUR = SaveCan() }
-  if modeContains("water_tower") { BEHAVIOUR = AvoidWaterTower() }
-  if modeContains("turn_green") { BEHAVIOUR = TurnOnGreen() }
-  if modeContains("follow_line") { BEHAVIOUR = FollowLine(true, true) }
-
-  if modeContains("water_tower") { bot.ledshim.SetPixel(io.BEHAVIOUR_PIXEL, io.COLOR_RED) }
-  if modeContains("turn_green") { bot.ledshim.SetPixel(io.BEHAVIOUR_PIXEL, io.COLOR_GREEN) }
-  if modeContains("follow_line") { bot.ledshim.SetPixel(io.BEHAVIOUR_PIXEL, io.COLOR_WHITE) }
+  BEHAVIOUR = behavioursFunctions[strings.Split(BEHAVIOUR, ":")[0]]()
+  bot.ledshim.SetPixel(io.BEHAVIOUR_PIXEL, behaviourLeds[BEHAVIOUR])
 }
 
-func FollowLine(useLeftSensor bool, useRightSensor bool) string {
+func FollowLine() string {
   intensityLeft := bot.colorSensorLeft.RgbIntensity()
   intensityRight := bot.colorSensorRight.RgbIntensity()
 
-  if !useLeftSensor { intensityLeft = 30 }
-  if !useRightSensor { intensityRight = 30 }
-
-  if (intensityLeft < 20) {
-    go bot.motorRight.RunForever(200)
-    go bot.motorLeft.RunForever(-100)
-  } else if (intensityRight < 20) {
-    go bot.motorRight.RunForever(-100)
-    go bot.motorLeft.RunForever(200)
+  if (intensityLeft < FOLLOW_LINE_HARD_TURN_VALUE) {
+    go bot.motorRight.RunForever(SpeedRatio(FOLLOW_LINE_SPEED, FOLLOW_LINE_SOFT_TURN_RATIO, FAST))
+    go bot.motorLeft.RunForever(SpeedRatio(FOLLOW_LINE_SPEED, FOLLOW_LINE_SOFT_TURN_RATIO, SLOW) - FOLLOW_LINE_SPEED)
+  } else if (intensityRight < FOLLOW_LINE_HARD_TURN_VALUE) {
+    go bot.motorRight.RunForever(SpeedRatio(FOLLOW_LINE_SPEED, FOLLOW_LINE_SOFT_TURN_RATIO, SLOW) - FOLLOW_LINE_SPEED)
+    go bot.motorLeft.RunForever(SpeedRatio(FOLLOW_LINE_SPEED, FOLLOW_LINE_SOFT_TURN_RATIO, FAST))
+  } else if (intensityLeft < FOLLOW_LINE_SOFT_TURN_VALUE) {
+    go bot.motorRight.RunForever(SpeedRatio(FOLLOW_LINE_SPEED, FOLLOW_LINE_SOFT_TURN_RATIO, FAST))
+    go bot.motorLeft.RunForever(SpeedRatio(FOLLOW_LINE_SPEED, FOLLOW_LINE_SOFT_TURN_RATIO, SLOW))
+  } else if (intensityRight < FOLLOW_LINE_SOFT_TURN_VALUE) {
+    go bot.motorRight.RunForever(SpeedRatio(FOLLOW_LINE_SPEED, FOLLOW_LINE_SOFT_TURN_RATIO, SLOW))
+    go bot.motorLeft.RunForever(SpeedRatio(FOLLOW_LINE_SPEED, FOLLOW_LINE_SOFT_TURN_RATIO, FAST))
   } else {
-    go bot.motorRight.RunForever(180)
-    go bot.motorLeft.RunForever(180)
+    go bot.motorRight.RunForever(FOLLOW_LINE_SPEED)
+    go bot.motorLeft.RunForever(FOLLOW_LINE_SPEED)
   }
 
   return BEHAVIOUR
 }
+
+func OneSensorLineFollowing(sensor int) string {
+  redLeft, greenLeft, blueLeft := bot.colorSensorLeft.Rgb()
+  redRight, greenRight, blueRight := bot.colorSensorRight.Rgb()
+
+  if (sensor == LEFT && greenLeft < redLeft + FOLLOW_LINE_GREEN_DIFFERENCE && greenLeft < blueLeft + FOLLOW_LINE_GREEN_DIFFERENCE) {
+    go bot.motorRight.RunForever(SpeedRatio(FOLLOW_LINE_SPEED, FOLLOW_LINE_SOFT_TURN_RATIO, FAST))
+    go bot.motorLeft.RunForever(SpeedRatio(FOLLOW_LINE_SPEED, FOLLOW_LINE_SOFT_TURN_RATIO, SLOW) - FOLLOW_LINE_SPEED)
+  } else if (sensor == RIGHT && greenRight < redRight + FOLLOW_LINE_GREEN_DIFFERENCE && greenRight < blueRight + FOLLOW_LINE_GREEN_DIFFERENCE) {
+    go bot.motorRight.RunForever(SpeedRatio(FOLLOW_LINE_SPEED, FOLLOW_LINE_SOFT_TURN_RATIO, SLOW) - FOLLOW_LINE_SPEED)
+    go bot.motorLeft.RunForever(SpeedRatio(FOLLOW_LINE_SPEED, FOLLOW_LINE_SOFT_TURN_RATIO, FAST))
+  } else {
+    go bot.motorRight.RunForever(FOLLOW_LINE_SPEED)
+    go bot.motorLeft.RunForever(FOLLOW_LINE_SPEED)
+  }
+
+  return BEHAVIOUR
+}
+
+var greenCooldown = 0
 
 func TurnOnGreen() string {
   if BEHAVIOUR == "turn_green:left" {
-    if GyroAtAngle(GREEN_FINISH_ANGLE, LEFT) {
-      return "follow_line"
+    if GyroTurnedToAngle(GREEN_FINISH_ANGLE, LEFT) {
+      greenCooldown = 0
+      return "turn_green:cooldown"
     }
-    FollowLine(true, false)
+    OneSensorLineFollowing(LEFT)
   }
 
   if BEHAVIOUR == "turn_green:right" {
-    if GyroAtAngle(-GREEN_FINISH_ANGLE, RIGHT) {
+    if GyroTurnedToAngle(-GREEN_FINISH_ANGLE, RIGHT) {
+      greenCooldown = 0
+      return "turn_green:cooldown"
+    }
+    OneSensorLineFollowing(RIGHT)
+  }
+
+  if BEHAVIOUR == "turn_green:cooldown" {
+    greenCooldown += 1
+    if greenCooldown > GREEN_COOLDOWN {
+      greenCooldown = 0
       return "follow_line"
     }
-    FollowLine(false, true)
+    FollowLine()
   }
 
   return BEHAVIOUR
 }
 
-var verifyAttempts = 0
+var waterTowerVerifyAttempts = 0
 
 func AvoidWaterTower() string {
   if BEHAVIOUR == "water_tower:start" {
     go bot.motorRight.RunForever(WATER_TOWER_VERIFY_SPEED)
     go bot.motorLeft.RunForever(WATER_TOWER_VERIFY_SPEED)
-    verifyAttempts = 0
+    waterTowerVerifyAttempts = 0
     return "water_tower:verify"
   }
 
@@ -75,18 +116,17 @@ func AvoidWaterTower() string {
       go bot.motorLeft.RunForever(-WATER_TOWER_TURN_SPEED)
       return "water_tower:turn"
     } else {
-      verifyAttempts += 1
-      if verifyAttempts > WATER_TOWER_VERIFY_ATTEMPTS {
+      waterTowerVerifyAttempts += 1
+      if waterTowerVerifyAttempts > WATER_TOWER_VERIFY_ATTEMPTS {
         return "follow_line"
       }
     }
   }
 
   if BEHAVIOUR == "water_tower:turn" {
-    if GyroAtAngle(WATER_TOWER_TURN_ANGLE, LEFT) {
-      go bot.motorLeft.Stop()
-      go bot.motorRight.Stop()
-      // run motors at correct turn ratio
+    if GyroTurnedToAngle(WATER_TOWER_TURN_ANGLE, LEFT) {
+      go bot.motorLeft.RunForever(int(float64(WATER_TOWER_AVOID_SPEED) * 1.0))
+      go bot.motorRight.RunForever(int(float64(WATER_TOWER_AVOID_SPEED) * WATER_TOWER_AVOID_RATIO))
       return "water_tower:avoid"
     }
   }
@@ -99,29 +139,41 @@ func AvoidWaterTower() string {
   }
 
   if BEHAVIOUR == "water_tower:recapture" {
-    if GyroAtAngle(WATER_TOWER_RECAPTURE_ANGLE, LEFT) {
-      // motors: stop
+    if GyroTurnedToAngle(WATER_TOWER_RECAPTURE_ANGLE, LEFT) {
       return "follow_line"
     }
-    FollowLine(true, false)
+    FollowLine()
   }
 
   return BEHAVIOUR
 }
 
+var chemicalSpillVerifyAttempts = 0
+
 func SaveCan() string {
+  if BEHAVIOUR == "chemical_spill:start" {
+    chemicalSpillVerifyAttempts = 0
+    go bot.motorRight.RunForever(SAVE_CAN_VERIFY_SPEED)
+    go bot.motorLeft.RunForever(SAVE_CAN_VERIFY_SPEED)
+    return "water_tower:verify"
+  }
+
   if BEHAVIOUR == "chemical_spill:verify" {
-    // motors: slow
+    chemicalSpillVerifyAttempts += 1
+    if chemicalSpillVerifyAttempts > SAVE_CAN_VERIFY_ATTEMPTS {
+      chemicalSpillVerifyAttempts = 0
+      go bot.motorRight.Stop()
+      go bot.motorLeft.Stop()
+      return "follow_line"
+    }
+
     left, right := GetColors()
     if left == GREEN && right == GREEN {
-      // motors: stop
-      return "water_tower:enter"
+      go bot.motorRight.Stop()
+      go bot.motorLeft.Stop()
+      return "chemical_spill:enter"
     }
   }
 
   return BEHAVIOUR
-}
-
-func modeContains(mode string) bool {
-  return strings.Contains(BEHAVIOUR, mode)
 }

@@ -59,6 +59,10 @@ func (colorSensor ColorSensor) New() ColorSensor {
   return colorSensor
 }
 
+func (colorSensor ColorSensor) GetCaches() [8]int {
+  return colorSensor.sensor.cachedValues
+}
+
 func (colorSensor *ColorSensor) ResetCache() {
   colorSensor.sensor.resetCache()
 }

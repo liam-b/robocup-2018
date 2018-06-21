@@ -91,13 +91,13 @@ func (ledshim *Ledshim) BufferPixel(x int, red int, green int, blue int) {
 func (ledshim Ledshim) Show() {
   ledshim.i2cDevice.WriteRegU8(BANK_ADDRESS, 0x00)
 
-  var output [144]int
+  var output [144]uint8
   for x := 0; x < ledshim.width; x++ {
-    red := ledshim.gamma[ledshim.Buffer[x][0]]
-    green := ledshim.gamma[ledshim.Buffer[x][1]]
-    blue := ledshim.gamma[ledshim.Buffer[x][2]]
+    red := ledshim.gamma[capInt(ledshim.Buffer[x][0])]
+    green := ledshim.gamma[capInt(ledshim.Buffer[x][1])]
+    blue := ledshim.gamma[capInt(ledshim.Buffer[x][2])]
 
-    rgb := [3]int{red, green, blue}
+    rgb := [3]uint8{uint8(red), uint8(green), uint8(blue)}
     for y := 0; y < 3; y++ {
       idx := ledshim.pixelAddress(x, y)
       output[idx] = rgb[y]
@@ -115,14 +115,14 @@ func (ledshim Ledshim) Show() {
 func (ledshim Ledshim) ShowIndividual(id int) {
   ledshim.i2cDevice.WriteRegU8(BANK_ADDRESS, 0x00)
 
-  red := ledshim.gamma[ledshim.Buffer[id][0]]
-  green := ledshim.gamma[ledshim.Buffer[id][1]]
-  blue := ledshim.gamma[ledshim.Buffer[id][2]]
+  red := ledshim.gamma[capInt(ledshim.Buffer[id][0])]
+  green := ledshim.gamma[capInt(ledshim.Buffer[id][1])]
+  blue := ledshim.gamma[capInt(ledshim.Buffer[id][2])]
 
-  rgb := [3]int{red, green, blue}
+  rgb := [3]uint8{uint8(red), uint8(green), uint8(blue)}
 
   for y := 0; y < 3; y++ {
-    ledshim.i2cDevice.WriteRegU8(uint8(COLOR_OFFSET + ledshim.pixelAddress(id, y)), uint8(rgb[y]))
+    ledshim.i2cDevice.WriteRegU8(uint8(COLOR_OFFSET + ledshim.pixelAddress(id, y)), rgb[y])
   }
 
   ledshim.i2cDevice.WriteRegU8(BANK_ADDRESS, CONFIG_BANK)
@@ -201,4 +201,9 @@ func (ledshim Ledshim) enableLeds() {
   ledshim.i2cDevice.WriteRegU8(0x0f, 0xfe)
   ledshim.i2cDevice.WriteRegU8(0x10, 0x7f)
   ledshim.i2cDevice.WriteRegU8(0x11, 0x00)
+}
+
+func capInt(x int) uint8 {
+  if x > 255 { x = 255 }
+  return uint8(x)
 }

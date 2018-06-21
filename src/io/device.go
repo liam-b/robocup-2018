@@ -15,10 +15,6 @@ func (device Device) set(attribute string, data string) {
   write(device.path + attribute, data)
 }
 
-func (device Device) bytes(file string) []byte {
-  return readBytes(device.path + file)
-}
-
 type IndexedDevice struct {
   port string
   path string
@@ -29,8 +25,8 @@ func (device *IndexedDevice) findDeviceFromPort() {
   foundDevice := false
 
   for _, file := range files {
-    if strings.Contains(read(device.path + "/" + file + "/address"), device.port) {
-      device.path = device.path + "/" + file + "/"
+    if strings.Contains(read(device.path + file + "/address"), device.port) {
+      device.path = device.path + file + "/"
       foundDevice = true
       break
     }
@@ -62,8 +58,8 @@ func (device *ManualDevice) findDeviceFromPort() {
   foundInitialDevice := false
 
   for _, file := range files {
-    if strings.Contains(read(device.path + "/" + file + "/address"), device.port) {
-      device.path = device.path + "/" + file + "/"
+    if strings.Contains(read(device.path + file + "/address"), device.port) {
+      device.path = device.path + file + "/"
       foundInitialDevice = true
       break
     }
@@ -78,8 +74,8 @@ func (device *ManualDevice) findDeviceFromPort() {
     foundDevice := false
 
     for _, file := range files {
-      if strings.Contains(read(device.path + "/" + file + "/address"), device.port) {
-        device.path = device.path + "/" + file + "/"
+      if strings.Contains(read(device.path + file + "/address"), device.port) {
+        device.path = device.path + file + "/"
         foundDevice = true
         break
       }

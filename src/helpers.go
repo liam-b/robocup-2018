@@ -5,23 +5,23 @@ func GetColors() (string, string) {
   leftTotal := bot.colorSensorLeft.RgbIntensity()
   leftColor := WHITE
 
-  if (leftTotal > 45) {
+  if (leftTotal > RGB_SILVER_VALUE) {
     leftColor = SILVER
-  } else if (leftGreen > leftBlue + 6 && leftGreen > leftRed + 6) {
+  } else if (leftGreen > leftBlue + RGB_GREEN_DIFFERENCE && leftGreen > leftRed + RGB_GREEN_DIFFERENCE && leftGreen < RGB_SILVER_VALUE) {
     leftColor = GREEN
-  } else if (leftTotal < 6) {
+  } else if (leftTotal < RGB_BLACK_VALUE) {
     leftColor = BLACK
   }
 
   rightRed, rightGreen, rightBlue := bot.colorSensorRight.Rgb()
-  rightTotal := int((rightRed + rightGreen + rightBlue) / 3)
+  rightTotal := bot.colorSensorRight.RgbIntensity()
   rightColor := WHITE
 
-  if (rightTotal > 45) {
+  if (rightTotal > RGB_SILVER_VALUE) {
     rightColor = SILVER
-  } else if (rightGreen > rightBlue + 6 && rightGreen > rightRed + 6) {
+  } else if (rightGreen > rightBlue + RGB_GREEN_DIFFERENCE && rightGreen > rightRed + RGB_GREEN_DIFFERENCE && rightGreen < RGB_SILVER_VALUE) {
     rightColor = GREEN
-  } else if (rightTotal < 6) {
+  } else if (rightTotal < RGB_BLACK_VALUE) {
     rightColor = BLACK
   }
 
@@ -34,16 +34,8 @@ func DetectedSilver() bool {
 }
 
 func DetectedGreen(sensor int) bool {
-  red, green, blue := 0, 0, 0
-
-  if sensor == LEFT {
-    red, green, blue = bot.colorSensorLeft.Rgb()
-  }
-  if sensor == RIGHT {
-    red, green, blue = bot.colorSensorRight.Rgb()
-  }
-
-  return green > blue + GREEN_DETECT_RGB_DIFFERENCE && green > red + GREEN_DETECT_RGB_DIFFERENCE
+  left, right := GetColors()
+  return left == GREEN && right == GREEN
 }
 
 var waterTowerMatches = 0
@@ -66,7 +58,7 @@ func DetectedWaterTower(distance int, count int) bool {
 
 var totalAngle = 0
 
-func GyroAtAngle(angle int, turnDirection int) bool {
+func GyroTurnedToAngle(angle int, turnDirection int) bool {
   totalAngle += bot.imu.ReadGyro()
 
   if turnDirection == LEFT && totalAngle > angle {
@@ -80,4 +72,8 @@ func GyroAtAngle(angle int, turnDirection int) bool {
   }
 
   return false
+}
+
+func SpeedRatio(speed int, ratio float64, sign int) int {
+  return speed + int(float64(speed) * ratio * float64(sign))
 }

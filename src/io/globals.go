@@ -31,6 +31,9 @@ const BATTERY_PIXEL = 0x01
 const SCOPE_PIXEL = 0x02
 const BEHAVIOUR_PIXEL = 0x04
 
+const COLOR_RIGHT_PIXEL = 0x1a
+const COLOR_LEFT_PIXEL = 0x1b
+
 var COLOR_BLACK = [3]int{0, 0, 0}
 var COLOR_WHITE = [3]int{120, 120, 120}
 

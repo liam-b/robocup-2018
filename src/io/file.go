@@ -15,12 +15,6 @@ func read(path string) string {
   return string(dat)
 }
 
-func readBytes(path string) []byte {
-  dat, err := ioutil.ReadFile(path)
-  check(err)
-  return dat
-}
-
 func write(path string, data string) {
   dat := []byte(data)
   err := ioutil.WriteFile(path, dat, 0644)
