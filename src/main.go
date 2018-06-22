@@ -29,8 +29,8 @@ func main() {
       ledshim: io.Ledshim{Address: 0x75}.New(),
     }
 
-    bot.ledshim.SetPixel(io.ENABLED_PIXEL, io.COLOR_GREEN)
-    bot.ledshim.SetPixel(io.SCOPE_PIXEL, io.COLOR_BLUE)
+    bot.ledshim.SetPixel(io.ENABLED_PIXEL, io.GREEN)
+    bot.ledshim.SetPixel(io.SCOPE_PIXEL, io.BLUE)
 
     log.once(".interrupt")
       log.trace("setting up interrupts")
@@ -52,7 +52,7 @@ func main() {
   log.dec()
 
   time.Sleep(time.Millisecond * time.Duration(START_LOOP_DELAY))
-  bot.ledshim.SetPixel(io.SCOPE_PIXEL, io.COLOR_GREEN)
+  bot.ledshim.SetPixel(io.SCOPE_PIXEL, io.GREEN)
   log.info("looping")
   log.rep("loop")
   loop()
@@ -85,7 +85,7 @@ func SetupInterrupts() {
 }
 
 func end(catch string) {
-  bot.ledshim.SetPixel(io.SCOPE_PIXEL, io.COLOR_RED)
+  bot.ledshim.SetPixel(io.SCOPE_PIXEL, io.RED)
   log.set(":end")
   log.trace("caught " + log.value(catch))
   log.notice("exiting program")

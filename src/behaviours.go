@@ -10,10 +10,10 @@ var behavioursFunctions = map[string]func()string{
   "follow_line": FollowLine}
 
 var behaviourLeds = map[string][3]int{
-  "chemical_spill": io.COLOR_BLUE,
-  "water_tower": io.COLOR_RED,
-  "turn_green": io.COLOR_GREEN,
-  "follow_line": io.COLOR_WHITE}
+  "chemical_spill": io.BLUE,
+  "water_tower": io.RED,
+  "turn_green": io.GREEN,
+  "follow_line": io.WHITE}
 
 func Behave() {
   if BEHAVIOUR == "follow_line" {
@@ -24,14 +24,17 @@ func Behave() {
   }
 
   BEHAVIOUR = behavioursFunctions[strings.Split(BEHAVIOUR, ":")[0]]()
-  bot.ledshim.SetPixel(io.BEHAVIOUR_PIXEL, behaviourLeds[BEHAVIOUR])
+  go bot.ledshim.SetPixel(io.BEHAVIOUR_PIXEL, behaviourLeds[BEHAVIOUR])
 }
 
 func FollowLine() string {
   intensityLeft := bot.colorSensorLeft.RgbIntensity()
   intensityRight := bot.colorSensorRight.RgbIntensity()
 
-  if (intensityLeft < FOLLOW_LINE_HARD_TURN_VALUE) {
+  if (intensityLeft < FOLLOW_LINE_HARD_TURN_VALUE && intensityRight < FOLLOW_LINE_HARD_TURN_VALUE) {
+    go bot.motorRight.RunForever(FOLLOW_LINE_SPEED)
+    go bot.motorLeft.RunForever(FOLLOW_LINE_SPEED)
+  } else if (intensityLeft < FOLLOW_LINE_HARD_TURN_VALUE) {
     go bot.motorRight.RunForever(SpeedRatio(FOLLOW_LINE_SPEED, FOLLOW_LINE_SOFT_TURN_RATIO, FAST))
     go bot.motorLeft.RunForever(SpeedRatio(FOLLOW_LINE_SPEED, FOLLOW_LINE_SOFT_TURN_RATIO, SLOW) - FOLLOW_LINE_SPEED)
   } else if (intensityRight < FOLLOW_LINE_HARD_TURN_VALUE) {

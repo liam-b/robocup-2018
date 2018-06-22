@@ -60,38 +60,40 @@ type DriveMotors struct {
   PortLeft string
   PortRight string
 
-  motorLefteft Motor
-  motorRightight Motor
+  motorLeft Motor
+  motorRight Motor
 }
 
 func (driveMotors DriveMotors) New() DriveMotors {
-  driveMotors.motorLefteft = Motor{Port: driveMotors.PortLeft}.New()
-
-  driveMotors.motorRightight = Motor{Port: driveMotors.PortRight}.New()
+  driveMotors.motorLeft = Motor{Port: driveMotors.PortLeft}.New()
+  driveMotors.motorRight = Motor{Port: driveMotors.PortRight}.New()
   return driveMotors
+}
+
+func (driveMotors DriveMotors) Stop() {
+  driveMotors.motorLeft.indexedDevice.set("command", "stop")
+  driveMotors.motorRight.indexedDevice.set("command", "stop")
 }
 
 func (driveMotors DriveMotors) RunForever(speed int) {
   speedString := strconv.Itoa(speed)
-  driveMotors.motorLefteft.indexedDevice.set("speed_sp", speedString)
-  driveMotors.motorRightight.indexedDevice.set("speed_sp", speedString)
+  driveMotors.motorLeft.indexedDevice.set("speed_sp", speedString)
+  driveMotors.motorRight.indexedDevice.set("speed_sp", speedString)
 
-  driveMotors.motorLefteft.indexedDevice.set("command", "run-forever")
-  driveMotors.motorRightight.indexedDevice.set("command", "run-forever")
+  driveMotors.motorLeft.indexedDevice.set("command", "run-forever")
+  driveMotors.motorRight.indexedDevice.set("command", "run-forever")
 }
 
-func (driveMotors DriveMotors) RunRatioForever(ratio []int, speed int) {
-  leftSpeed := ratio[0] * speed
-  if leftSpeed > 1000 { leftSpeed = 1000 }
-  rightSpeed := ratio[1] * speed
-  if rightSpeed > 1000 { rightSpeed = 1000 }
+func (driveMotors DriveMotors) RunRatioForever(speed int, ratio [2]int) {
+  leftSpeed := speed + int(float64(speed) * float64(ratio[0]))
+  rightSpeed := speed + int(float64(speed) * float64(ratio[1]))
 
-  rightSpeedString := strconv.Itoa(leftSpeed)
-  leftSpeedString := strconv.Itoa(rightSpeed)
+  leftSpeedString := strconv.Itoa(leftSpeed)
+  rightSpeedString := strconv.Itoa(rightSpeed)
 
-  driveMotors.motorLefteft.indexedDevice.set("speed_sp", rightSpeedString)
-  driveMotors.motorRightight.indexedDevice.set("speed_sp", leftSpeedString)
+  driveMotors.motorLeft.indexedDevice.set("speed_sp", rightSpeedString)
+  driveMotors.motorRight.indexedDevice.set("speed_sp", leftSpeedString)
 
-  driveMotors.motorLefteft.indexedDevice.set("command", "run-forever")
-  driveMotors.motorRightight.indexedDevice.set("command", "run-forever")
+  driveMotors.motorLeft.indexedDevice.set("command", "run-forever")
+  driveMotors.motorRight.indexedDevice.set("command", "run-forever")
 }

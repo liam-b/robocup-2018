@@ -35,12 +35,12 @@ func batteryStatus() {
       log.warn("possible overvolting")
     } else if (currentVoltage < 105) {
       log.error("replace battery now")
-      bot.ledshim.SetPixel(io.BATTERY_PIXEL, io.COLOR_RED)
+      bot.ledshim.SetPixel(io.BATTERY_PIXEL, io.RED)
     } else if (currentVoltage < 110) {
       log.warn("battery needs replacing")
-      bot.ledshim.SetPixel(io.BATTERY_PIXEL, io.COLOR_BLUE)
+      bot.ledshim.SetPixel(io.BATTERY_PIXEL, io.BLUE)
     } else {
-      bot.ledshim.SetPixel(io.BATTERY_PIXEL, io.COLOR_GREEN)
+      bot.ledshim.SetPixel(io.BATTERY_PIXEL, io.GREEN)
     }
   log.dec()
 }
