@@ -1,4 +1,4 @@
-package io
+package main
 
 import "strings"
 import "errors"

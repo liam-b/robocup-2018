@@ -6,7 +6,7 @@ import "os"
 import "strconv"
 // import "fmt"
 
-import "./io"
+
 
 var log Logger = Logger{flag: "test", level: LOG_LEVEL}.New(":start")
 var bot Bot
@@ -17,20 +17,20 @@ func main() {
   log.inc(":setup")
     log.debug("setting up io")
     bot = Bot{
-      battery: io.Battery{}.New(),
-      colorSensorRight: io.ColorSensor{Port: io.S2}.New(),
-      colorSensorLeft: io.ColorSensor{Port: io.S3}.New(),
-      ultrasonicSensor: io.UltrasonicSensor{Port: io.S4}.New(),
-      imu: io.IMU{Address: 0x68}.New(),
+      battery: Battery{}.New(),
+      colorSensorRight: ColorSensor{Port: S2}.New(),
+      colorSensorLeft: ColorSensor{Port: S3}.New(),
+      ultrasonicSensor: UltrasonicSensor{Port: S4}.New(),
+      imu: IMU{Address: 0x68}.New(),
 
-      motorLeft: io.Motor{Port: io.MC}.New(),
-      motorRight: io.Motor{Port: io.MB}.New(),
+      motorLeft: Motor{Port: MC}.New(),
+      motorRight: Motor{Port: MB}.New(),
 
-      ledshim: io.Ledshim{Address: 0x75}.New(),
+      ledshim: Ledshim{Address: 0x75}.New(),
     }
 
-    bot.ledshim.SetPixel(io.ENABLED_PIXEL, io.GREEN)
-    bot.ledshim.SetPixel(io.SCOPE_PIXEL, io.BLUE)
+    bot.ledshim.SetPixel(ENABLED_PIXEL, COLOR_GREEN)
+    bot.ledshim.SetPixel(SCOPE_PIXEL, COLOR_BLUE)
 
     log.once(".interrupt")
       log.trace("setting up interrupts")
@@ -48,11 +48,11 @@ func main() {
 
   log.inc(":status")
     log.info("checking status")
-    batteryStatus()
+    BatteryStatus()
   log.dec()
 
   time.Sleep(time.Millisecond * time.Duration(START_LOOP_DELAY))
-  bot.ledshim.SetPixel(io.SCOPE_PIXEL, io.GREEN)
+  bot.ledshim.SetPixel(SCOPE_PIXEL, COLOR_GREEN)
   log.info("looping")
   log.rep("loop")
   loop()
@@ -85,7 +85,7 @@ func SetupInterrupts() {
 }
 
 func end(catch string) {
-  bot.ledshim.SetPixel(io.SCOPE_PIXEL, io.RED)
+  bot.ledshim.SetPixel(SCOPE_PIXEL, COLOR_RED)
   log.set(":end")
   log.trace("caught " + log.value(catch))
   log.notice("exiting program")

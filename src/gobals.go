@@ -24,6 +24,8 @@ const BOTH = 2
 const FAST = 1
 const SLOW = -1
 
+// behaviours //
+
 var BEHAVIOUR = "follow_line"
 
 const DO_GREEN_TURN = true
@@ -54,3 +56,24 @@ const WATER_TOWER_RECAPTURE_ANGLE = 600
 
 const SAVE_CAN_VERIFY_SPEED = 50
 const SAVE_CAN_VERIFY_ATTEMPTS = 50
+
+// leds //
+
+const ENABLED_PIXEL = 0x00
+const BATTERY_PIXEL = 0x01
+const SCOPE_PIXEL = 0x02
+const BEHAVIOUR_PIXEL = 0x04
+
+const COLOR_RIGHT_PIXEL = 0x1a
+const COLOR_LEFT_PIXEL = 0x1b
+
+var COLOR_BLACK = [3]int{0, 0, 0}
+var COLOR_WHITE = [3]int{120, 120, 120}
+
+var COLOR_RED = [3]int{150, 0, 0}
+var COLOR_GREEN = [3]int{0, 120, 0}
+var COLOR_BLUE = [3]int{0, 0, 150}
+
+var COLOR_YELLOW = [3]int{250, 200, 0}
+var COLOR_PURPLE = [3]int{150, 0, 150}
+var COLOR_CYAN = [3]int{0, 150, 150}
