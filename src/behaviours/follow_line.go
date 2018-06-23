@@ -4,10 +4,10 @@ func FollowLine() string {
   intensityLeft := bot.colorSensorLeft.RgbIntensity()
   intensityRight := bot.colorSensorRight.RgbIntensity()
 
-  if (intensityLeft < FOLLOW_LINE_HARD_TURN_VALUE && intensityRight < FOLLOW_LINE_HARD_TURN_VALUE) {
+  /* if (intensityLeft < FOLLOW_LINE_HARD_TURN_VALUE && intensityRight < FOLLOW_LINE_HARD_TURN_VALUE) {
     go bot.motorRight.RunForever(FOLLOW_LINE_SPEED)
     go bot.motorLeft.RunForever(FOLLOW_LINE_SPEED)
-  } else if (intensityLeft < FOLLOW_LINE_HARD_TURN_VALUE) {
+  } else */ if (intensityLeft < FOLLOW_LINE_HARD_TURN_VALUE) {
     go bot.motorRight.RunForever(SpeedRatio(FOLLOW_LINE_SPEED, FOLLOW_LINE_SOFT_TURN_RATIO, FAST))
     go bot.motorLeft.RunForever(SpeedRatio(FOLLOW_LINE_SPEED, FOLLOW_LINE_SOFT_TURN_RATIO, SLOW) - FOLLOW_LINE_SPEED)
   } else if (intensityRight < FOLLOW_LINE_HARD_TURN_VALUE) {

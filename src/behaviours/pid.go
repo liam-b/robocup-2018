@@ -1,7 +1,7 @@
 package main
 
 const KP = 3.0
-const KI = 0.0
+const KI = 1.0
 const KD = 20.0
 const BASE_SPEED = 300
 
@@ -9,16 +9,12 @@ var lastError = 0.0
 var integral = 0.0
 
 func min(x, y int) int {
-  if x < y {
-    return x
-  }
+  if x < y { return x }
   return y
 }
 
 func max(x, y int) int {
-  if x > y {
-    return x
-  }
+  if x > y { return x }
   return y
 }
 
