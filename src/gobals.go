@@ -14,17 +14,11 @@ const WHITE = "white"
 const SILVER = "silver"
 const GREEN = "green"
 
-const RGB_GREEN_DIFFERENCE = 6
-const RGB_SILVER_VALUE = 40
-const RGB_BLACK_VALUE = 9
-
 const LEFT = 0
 const RIGHT = 1
 const BOTH = 2
 const FAST = 1
 const SLOW = -1
-
-// leds //
 
 const ENABLED_PIXEL = 0x00
 const BATTERY_PIXEL = 0x01

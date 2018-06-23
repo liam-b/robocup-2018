@@ -61,14 +61,20 @@ func loop() {
     bot.ResetAllCaches()
     time.Sleep(time.Second / time.Duration(LOOP_SPEED))
 
-    // Behave()
+    Behave()
     // FollowLine(true, true)
     // log.debug(BEHAVIOUR + ", " + strconv.Itoa(int(float64(2550 - bot.ultrasonicSensor.Distance()) / 2.55)))
     // log.debug(BEHAVIOUR + ", " + strconv.Itoa(totalAngle))
-    // log.debug(BEHAVIOUR + ", " + "l: " + strconv.Itoa(bot.colorSensorLeft.RgbIntensity()) + " r: " + strconv.Itoa(bot.colorSensorRight.RgbIntensity()))
-    log.debug(strconv.Itoa(bot.colorSensorLeft.RgbIntensity() - bot.colorSensorRight.RgbIntensity()))
-    PID()
+    log.debug(BEHAVIOUR + ", " + "l: " + strconv.Itoa(bot.colorSensorLeft.RgbIntensity()) + " r: " + strconv.Itoa(bot.colorSensorRight.RgbIntensity()))
+    // log.debug(strconv.Itoa(bot.colorSensorLeft.RgbIntensity() - bot.colorSensorRight.RgbIntensity()))
+    // PID()
     // log.debug(strconv.FormatBool(DetectedGreen(LEFT)))
+
+    // leftRed, leftGreen, leftBlue := bot.colorSensorLeft.Rgb()
+    // rightRed, rightGreen, rightBlue := bot.colorSensorRight.Rgb()
+    //
+    // bot.ledshim.SetPixel(COLOR_LEFT_PIXEL, [3]int{leftRed * 4, leftGreen * 4, leftBlue * 4})
+    // bot.ledshim.SetPixel(COLOR_RIGHT_PIXEL, [3]int{rightRed * 4, rightGreen * 4, rightBlue * 4})
   }
 
   loop()

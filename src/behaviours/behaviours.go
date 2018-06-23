@@ -2,9 +2,9 @@ package main
 
 import "strings"
 
-const DO_GREEN_TURN = true
-const DO_WATER_TOWER = true
-const DO_CHEMICAL_SPILL = true
+const DO_GREEN_TURN = false
+const DO_WATER_TOWER = false
+const DO_CHEMICAL_SPILL = false
 
 var BEHAVIOUR = "follow_line"
 
@@ -12,13 +12,15 @@ var behavioursFunctions = map[string]func()string{
   "chemical_spill": SaveCan,
   "water_tower": AvoidWaterTower,
   "turn_green": TurnOnGreen,
-  "follow_line": FollowLine}
+  "follow_line": PID,
+  "lifted": Lifted}
 
 var behaviourLeds = map[string][3]int{
   "chemical_spill": COLOR_BLUE,
   "water_tower": COLOR_RED,
   "turn_green": COLOR_GREEN,
-  "follow_line": COLOR_WHITE}
+  "follow_line": COLOR_WHITE,
+  "lifted": COLOR_YELLOW}
 
 func Behave() {
   if BEHAVIOUR == "follow_line" {
@@ -28,6 +30,9 @@ func Behave() {
     if DO_CHEMICAL_SPILL && DetectedSilver() { BEHAVIOUR = "chemical_spill:start" }
   }
 
-  BEHAVIOUR = behavioursFunctions[strings.Split(BEHAVIOUR, ":")[0]]()
-  go bot.ledshim.SetPixel(BEHAVIOUR_PIXEL, behaviourLeds[BEHAVIOUR])
+  if BotLifted(LIFTED_DETECT_COUNT) { BEHAVIOUR = "lifted:start" }
+
+  baseBehaviour := strings.Split(BEHAVIOUR, ":")[0]
+  BEHAVIOUR = behavioursFunctions[baseBehaviour]()
+  go bot.ledshim.SetPixel(BEHAVIOUR_PIXEL, behaviourLeds[baseBehaviour])
 }

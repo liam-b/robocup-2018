@@ -1,5 +1,9 @@
 package main
 
+const RGB_GREEN_DIFFERENCE = 6
+const RGB_SILVER_VALUE = 40
+const RGB_BLACK_VALUE = 9
+
 func GetColors() (string, string) {
   leftRed, leftGreen, leftBlue := bot.colorSensorLeft.Rgb()
   leftTotal := bot.colorSensorLeft.RgbIntensity()
@@ -36,6 +40,26 @@ func DetectedSilver() bool {
 func DetectedGreen(sensor int) bool {
   left, right := GetColors()
   return left == GREEN && right == GREEN
+}
+
+var liftedMatches = 0
+
+func BotLifted(count int) bool {
+  if bot.colorSensorLeft.RgbIntensity() == 0 && bot.colorSensorRight.RgbIntensity() == 0 {
+    liftedMatches += 1
+  } else {
+    liftedMatches = 0
+  }
+
+  if liftedMatches > count {
+    liftedMatches = 0
+    return true
+  }
+  return false
+}
+
+func BotPlacedDown() bool {
+  return bot.colorSensorLeft.RgbIntensity() > 1 && bot.colorSensorRight.RgbIntensity() > 1
 }
 
 var waterTowerMatches = 0
@@ -76,4 +100,10 @@ func GyroTurnedToAngle(angle int, turnDirection int) bool {
 
 func SpeedRatio(speed int, ratio float64, sign int) int {
   return speed + int(float64(speed) * ratio * float64(sign))
+}
+
+func ResetHelpers() {
+  liftedMatches = 0
+  waterTowerMatches = 0
+  totalAngle = 0
 }
