@@ -6,8 +6,6 @@ import "os"
 import "strconv"
 // import "fmt"
 
-
-
 var log Logger = Logger{flag: "test", level: LOG_LEVEL}.New(":start")
 var bot Bot
 
@@ -63,11 +61,13 @@ func loop() {
     bot.ResetAllCaches()
     time.Sleep(time.Second / time.Duration(LOOP_SPEED))
 
-    Behave()
+    // Behave()
     // FollowLine(true, true)
     // log.debug(BEHAVIOUR + ", " + strconv.Itoa(int(float64(2550 - bot.ultrasonicSensor.Distance()) / 2.55)))
     // log.debug(BEHAVIOUR + ", " + strconv.Itoa(totalAngle))
-    log.debug(BEHAVIOUR + ", " + "l: " + strconv.Itoa(bot.colorSensorLeft.RgbIntensity()) + " r: " + strconv.Itoa(bot.colorSensorRight.RgbIntensity()))
+    // log.debug(BEHAVIOUR + ", " + "l: " + strconv.Itoa(bot.colorSensorLeft.RgbIntensity()) + " r: " + strconv.Itoa(bot.colorSensorRight.RgbIntensity()))
+    log.debug(strconv.Itoa(bot.colorSensorLeft.RgbIntensity() - bot.colorSensorRight.RgbIntensity()))
+    PID()
     // log.debug(strconv.FormatBool(DetectedGreen(LEFT)))
   }
 

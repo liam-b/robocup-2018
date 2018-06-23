@@ -19,7 +19,4 @@ func (bot *Bot) ResetAllCaches()() {
   bot.colorSensorRight.ResetCache()
   bot.ultrasonicSensor.ResetCache()
   bot.imu.ResetCache()
-
-  // bot.motorLeft.ResetCache()
-  // bot.motorRight.ResetCache()
 }
