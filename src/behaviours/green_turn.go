@@ -1,5 +1,8 @@
 package main
 
+const GREEN_FINISH_ANGLE = 700
+const GREEN_COOLDOWN = 10
+
 var greenCooldown = 0
 
 func TurnOnGreen() string {

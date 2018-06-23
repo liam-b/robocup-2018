@@ -1,9 +1,9 @@
 package main
 
-const KP = 3.0
+const KP = 4.5
 const KI = 1.0
-const KD = 20.0
-const BASE_SPEED = 300
+const KD = 5.0
+const BASE_SPEED = 400
 
 var lastError = 0.0
 var integral = 0.0

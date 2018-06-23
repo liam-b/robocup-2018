@@ -1,5 +1,8 @@
 package main
 
+const SAVE_CAN_VERIFY_SPEED = 50
+const SAVE_CAN_VERIFY_ATTEMPTS = 50
+
 var chemicalSpillVerifyAttempts = 0
 
 func SaveCan() string {
