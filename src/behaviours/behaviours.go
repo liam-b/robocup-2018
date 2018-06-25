@@ -23,16 +23,33 @@ var behaviourLeds = map[string][3]int{
   "lifted": COLOR_YELLOW}
 
 func Behave() {
-  if BEHAVIOUR == "follow_line" {
-    if DO_GREEN_TURN && DetectedGreen(LEFT) { BEHAVIOUR = "turn_green:left" }
-    if DO_GREEN_TURN && DetectedGreen(RIGHT) { BEHAVIOUR = "turn_green:right" }
+  if BehaviourIndex(MAJOR) == "follow_line" {
+    if DO_GREEN_TURN && DetectedGreen(LEFT) { BEHAVIOUR = "turn_green:start.left" }
+    if DO_GREEN_TURN && DetectedGreen(RIGHT) { BEHAVIOUR = "turn_green:start.right" }
     if DO_WATER_TOWER && DetectedWaterTower(WATER_TOWER_DETECT_DISTANCE, WATER_TOWER_DETECT_COUNT) { BEHAVIOUR = "water_tower:start" }
     if DO_CHEMICAL_SPILL && DetectedSilver() { BEHAVIOUR = "chemical_spill:start" }
   }
-
   if BotLifted(LIFTED_DETECT_COUNT) { BEHAVIOUR = "lifted:start" }
 
-  baseBehaviour := strings.Split(BEHAVIOUR, ":")[0]
-  BEHAVIOUR = behavioursFunctions[baseBehaviour]()
-  go bot.ledshim.SetPixel(BEHAVIOUR_PIXEL, behaviourLeds[baseBehaviour])
+  BEHAVIOUR = behavioursFunctions[SplitBehaviour(MAJOR)]()
+  go bot.ledshim.SetPixel(BEHAVIOUR_PIXEL, behaviourLeds[SplitBehaviour(MAJOR)])
+}
+
+func MAJOR(comparison string) bool {
+  splitBehaviour := strings.Split(BEHAVIOUR, ".")
+  return strings.Split(splitBehaviour[0], ":")[0] == comparison
+}
+
+func MINOR(comparison string) bool {
+  splitBehaviour := strings.Split(BEHAVIOUR, ".")
+  return ":" + strings.Split(splitBehaviour[0], ":")[1] == comparison
+}
+
+func PARAM(param string) bool {
+  return strings.Contains(BEHAVIOUR, param)
+}
+
+func PARAMS() []string {
+  splitBehaviour := strings.Split(BEHAVIOUR, ":")
+  return strings.Split(splitBehaviour[len(splitBehaviour) - 1], ".")[1:]
 }

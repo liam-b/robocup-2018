@@ -8,33 +8,35 @@ var greenOverride = 0
 var greenCooldown = 0
 
 func TurnOnGreen() string {
-  if BEHAVIOUR == "turn_green:left" || BEHAVIOUR == "turn_green:right" {
+  if MINOR(":start") {
+    greenOverride = 0
+    return "turn_green:turn" // FIXME: won't pass params
+  }
+
+  if MINOR(":turn") {
     greenOverride += 1
     if greenOverride > GREEN_OVERRIDE_COUNT {
       greenOverride = 0
       return "follow_line"
     }
-  }
 
-  if BEHAVIOUR == "turn_green:left" {
-    if GyroTurnedToAngle(GREEN_FINISH_ANGLE, LEFT) {
-      greenOverride = 0
-      greenCooldown = 0
-      return "turn_green:cooldown"
+    if PARAM(".left") {
+      if GyroTurnedToAngle(GREEN_FINISH_ANGLE, LEFT) {
+        greenCooldown = 0
+        return "turn_green:cooldown"
+      }
+      OneSensorLineFollowing(LEFT)
     }
-    OneSensorLineFollowing(LEFT)
+
+    if PARAM(".right") {
+      if GyroTurnedToAngle(-GREEN_FINISH_ANGLE, RIGHT) {
+        greenCooldown = 0
+        return "turn_green:cooldown"
+      }
+      OneSensorLineFollowing(RIGHT)
   }
 
-  if BEHAVIOUR == "turn_green:right" {
-    if GyroTurnedToAngle(-GREEN_FINISH_ANGLE, RIGHT) {
-      greenOverride = 0
-      greenCooldown = 0
-      return "turn_green:cooldown"
-    }
-    OneSensorLineFollowing(RIGHT)
-  }
-
-  if BEHAVIOUR == "turn_green:cooldown" {
+  if MINOR(":cooldown") {
     greenCooldown += 1
     if greenCooldown > GREEN_COOLDOWN {
       greenCooldown = 0

@@ -6,14 +6,14 @@ const SAVE_CAN_VERIFY_ATTEMPTS = 50
 var chemicalSpillVerifyAttempts = 0
 
 func SaveCan() string {
-  if BEHAVIOUR == "chemical_spill:start" {
+  if MINOR(":start") {
     chemicalSpillVerifyAttempts = 0
     go bot.motorRight.RunForever(SAVE_CAN_VERIFY_SPEED)
     go bot.motorLeft.RunForever(SAVE_CAN_VERIFY_SPEED)
     return "water_tower:verify"
   }
 
-  if BEHAVIOUR == "chemical_spill:verify" {
+  if MINOR(":verify") {
     chemicalSpillVerifyAttempts += 1
     if chemicalSpillVerifyAttempts > SAVE_CAN_VERIFY_ATTEMPTS {
       chemicalSpillVerifyAttempts = 0
