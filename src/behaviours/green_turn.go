@@ -8,12 +8,12 @@ var greenOverride = 0
 var greenCooldown = 0
 
 func TurnOnGreen() string {
-  if MINOR(":start") {
+  if STATE(":start") {
     greenOverride = 0
-    return "turn_green:turn" // FIXME: won't pass params
+    return "turn_green:turn" + PARAMS()
   }
 
-  if MINOR(":turn") {
+  if STATE(":turn") {
     greenOverride += 1
     if greenOverride > GREEN_OVERRIDE_COUNT {
       greenOverride = 0
@@ -34,9 +34,10 @@ func TurnOnGreen() string {
         return "turn_green:cooldown"
       }
       OneSensorLineFollowing(RIGHT)
+    }
   }
 
-  if MINOR(":cooldown") {
+  if STATE(":cooldown") {
     greenCooldown += 1
     if greenCooldown > GREEN_COOLDOWN {
       greenCooldown = 0
