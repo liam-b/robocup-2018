@@ -1,6 +1,5 @@
 package main
 
-// base
 const KP = 4.0
 const KI = 2.0
 const KD = 7.0
