@@ -10,7 +10,7 @@ var lastError = 0.0
 var integral = 0.0
 
 func PID() string {
-  currentError := float64(bot.colorSensorLeft.RgbIntensity() - bot.colorSensorRight.RgbIntensity())
+  currentError := colorSensorError()
   integral := integral + currentError;
   derivative := currentError - lastError;
 
@@ -24,4 +24,8 @@ func PID() string {
   go bot.motorRight.RunForever(rightMotorSpeed)
 
   return BEHAVIOUR
+}
+
+func colorSensorError() float64 {
+  return float64(bot.colorSensorLeft.RgbIntensity() - bot.colorSensorRight.RgbIntensity())
 }
