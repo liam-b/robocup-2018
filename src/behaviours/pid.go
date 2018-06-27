@@ -2,7 +2,7 @@ package main
 
 const KP = 4.1
 const KI = 2.0
-const KD = 7.0
+const KD = 6.0
 const BASE_SPEED = 400
 
 var lastError = 0.0
