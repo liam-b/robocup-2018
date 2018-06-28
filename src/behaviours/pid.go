@@ -1,16 +1,15 @@
 package main
 
-// base
-const KP = 4.0
+const KP = 4.1
 const KI = 2.0
-const KD = 7.0
+const KD = 6.0
 const BASE_SPEED = 400
 
 var lastError = 0.0
 var integral = 0.0
 
 func PID() string {
-  currentError := float64(bot.colorSensorLeft.RgbIntensity() - bot.colorSensorRight.RgbIntensity())
+  currentError := colorSensorError()
   integral := integral + currentError;
   derivative := currentError - lastError;
 
@@ -24,4 +23,8 @@ func PID() string {
   go bot.motorRight.RunForever(rightMotorSpeed)
 
   return BEHAVIOUR
+}
+
+func colorSensorError() float64 {
+  return float64(bot.colorSensorLeft.RgbIntensity() - bot.colorSensorRight.RgbIntensity())
 }
