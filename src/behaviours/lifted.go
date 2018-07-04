@@ -12,7 +12,7 @@ func Lifted() string {
   }
 
   if STATE(":wait") {
-    if BotPlacedDown() { return "follow_line" }
+    if BotPlacedDown() && bot.touchSensor.Pressed() { return "follow_line" }
   }
 
   return BEHAVIOUR

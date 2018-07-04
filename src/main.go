@@ -68,10 +68,10 @@ func loop() {
     // FollowLine(true, true)
     // log.debug(BEHAVIOUR + ", " + strconv.Itoa(int(float64(2550 - bot.ultrasonicSensor.Distance()) / 2.55)))
     // log.debug(BEHAVIOUR + ", " + strconv.Itoa(totalAngle))
-    // log.debug(BEHAVIOUR + ", " + "l: " + strconv.Itoa(bot.colorSensorLeft.RgbIntensity()) + " r: " + strconv.Itoa(bot.colorSensorRight.RgbIntensity()))
+    log.debug(BEHAVIOUR + ", " + "l: " + strconv.Itoa(bot.colorSensorLeft.RgbIntensity()) + " r: " + strconv.Itoa(bot.colorSensorRight.RgbIntensity()))
     // log.debug(strconv.Itoa(bot.colorSensorLeft.RgbIntensity() - bot.colorSensorRight.RgbIntensity()))
     // PID()
-    log.debug(strconv.FormatBool(bot.touchSensor.Pressed()))
+    // log.debug(strconv.FormatBool())
 
     // _, leftGreen, _ := bot.colorSensorLeft.Rgb()
     // _, rightGreen, _ := bot.colorSensorRight.Rgb()
