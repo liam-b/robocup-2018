@@ -1,7 +1,7 @@
 package main
 
 const RGB_GREEN_DIFFERENCE = 6
-const RGB_SILVER_VALUE = 38
+const RGB_SILVER_VALUE = 36
 const RGB_BLACK_VALUE = 9
 
 func GetColors() (string, string) {

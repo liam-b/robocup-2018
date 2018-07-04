@@ -1,7 +1,7 @@
 package main
 
 const GREEN_FINISH_ANGLE = 700
-const GREEN_OVERRIDE_COUNT = 80
+const GREEN_OVERRIDE_COUNT = 60
 const GREEN_COOLDOWN = 10
 
 var greenOverride = 0

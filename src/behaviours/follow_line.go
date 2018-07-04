@@ -5,7 +5,7 @@ const FOLLOW_LINE_HARD_TURN_RATIO = 1.3
 const FOLLOW_LINE_SOFT_TURN_RATIO = 1.2
 const FOLLOW_LINE_HARD_TURN_VALUE = 10
 const FOLLOW_LINE_SOFT_TURN_VALUE = 27
-const FOLLOW_LINE_GREEN_DIFFERENCE = 11
+const FOLLOW_LINE_GREEN_DIFFERENCE = 10
 
 func FollowLine() string {
   intensityLeft := bot.colorSensorLeft.RgbIntensity()

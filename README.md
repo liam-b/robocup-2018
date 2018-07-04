@@ -1,6 +1,6 @@
 # robocup-2018
-just like last year only we will win this time.
+A robot for [RCJA](http://www.robocupjunior.org.au/) using a raspberry pi with a [brickpi](https://www.dexterindustries.com/brickpi/) shield running [ev3dev](www.ev3dev.org).
 
-# ip
+### ip addresses
 - home: robot@192.168.1.162
 - hotspot: robot@192.168.43.35
