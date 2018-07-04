@@ -39,5 +39,5 @@ func DetectedSilver() bool {
 
 func DetectedGreen(sensor int) bool {
   left, right := GetColors()
-  return left == GREEN && right == GREEN
+  return (sensor == LEFT && left == GREEN) || (sensor == RIGHT && right == GREEN)
 }

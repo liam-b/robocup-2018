@@ -1,17 +1,20 @@
 package main
 
-const KP = 4.1
-const KI = 2.0
-const KD = 6.0
-const BASE_SPEED = 400
+import "math"
+
+const KP = 7.0
+const KI = 0.0
+const KD = 8.0
+const BASE_SPEED = 300
 
 var lastError = 0.0
 var integral = 0.0
 
 func PID() string {
   currentError := colorSensorError()
+  currentError += currentError * (math.Abs(currentError) / 50)
   integral := integral + currentError;
-  derivative := currentError - lastError;
+  derivative := currentError - lastError
 
   motorSpeed := (KP * currentError) + (KI * integral) + (KD * derivative);
   lastError = currentError;

@@ -3,7 +3,7 @@ package main
 import "strings"
 
 const DO_GREEN_TURN = false
-const DO_WATER_TOWER = false
+const DO_WATER_TOWER = true
 const DO_CHEMICAL_SPILL = false
 
 var BEHAVIOUR = "follow_line"
