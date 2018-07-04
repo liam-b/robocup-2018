@@ -43,7 +43,7 @@ func TurnOnGreen() string {
       greenCooldown = 0
       return "follow_line"
     }
-    FollowLine()
+    PID()
   }
 
   return BEHAVIOUR

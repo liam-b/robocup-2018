@@ -2,9 +2,9 @@ package main
 
 import "strings"
 
-const DO_GREEN_TURN = false
+const DO_GREEN_TURN = true
 const DO_WATER_TOWER = true
-const DO_CHEMICAL_SPILL = false
+const DO_CHEMICAL_SPILL = true
 
 var BEHAVIOUR = "follow_line"
 
