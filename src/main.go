@@ -16,6 +16,8 @@ func main() {
     log.debug("setting up io")
     bot = Bot{
       battery: Battery{}.New(),
+
+      touchSensor: TouchSensor{Port: S1}.New(),
       colorSensorRight: ColorSensor{Port: S2}.New(),
       colorSensorLeft: ColorSensor{Port: S3}.New(),
       ultrasonicSensor: UltrasonicSensor{Port: S4}.New(),
@@ -42,6 +44,7 @@ func main() {
     bot.colorSensorLeft.Mode(bot.colorSensorLeft.RGB)
     bot.colorSensorRight.Mode(bot.colorSensorRight.RGB)
     bot.ultrasonicSensor.Mode(bot.ultrasonicSensor.DISTANCE)
+    bot.touchSensor.Mode(bot.touchSensor.TOUCH)
   log.dec()
 
   log.inc(":status")
@@ -68,11 +71,11 @@ func loop() {
     // log.debug(BEHAVIOUR + ", " + "l: " + strconv.Itoa(bot.colorSensorLeft.RgbIntensity()) + " r: " + strconv.Itoa(bot.colorSensorRight.RgbIntensity()))
     // log.debug(strconv.Itoa(bot.colorSensorLeft.RgbIntensity() - bot.colorSensorRight.RgbIntensity()))
     // PID()
-    // log.debug(strconv.FormatBool(DetectedGreen(LEFT)))
+    log.debug(strconv.FormatBool(bot.touchSensor.Pressed()))
 
-    _, leftGreen, _ := bot.colorSensorLeft.Rgb()
-    _, rightGreen, _ := bot.colorSensorRight.Rgb()
-    log.debug(BEHAVIOUR + ", " + "l: " + strconv.Itoa(leftGreen) + " r: " + strconv.Itoa(rightGreen))
+    // _, leftGreen, _ := bot.colorSensorLeft.Rgb()
+    // _, rightGreen, _ := bot.colorSensorRight.Rgb()
+    // log.debug(BEHAVIOUR + ", " + "l: " + strconv.Itoa(leftGreen) + " r: " + strconv.Itoa(rightGreen))
     //
     // bot.ledshim.SetPixel(COLOR_LEFT_PIXEL, [3]int{leftRed * 4, leftGreen * 4, leftBlue * 4})
     // bot.ledshim.SetPixel(COLOR_RIGHT_PIXEL, [3]int{rightRed * 4, rightGreen * 4, rightBlue * 4})

@@ -129,10 +129,10 @@ func (touchSensor *TouchSensor) ResetCache() {
   touchSensor.sensor.resetCache()
 }
 
-func (touchSensor TouchSensor) Mode(newMode string) {
+func (touchSensor *TouchSensor) Mode(newMode string) {
   touchSensor.sensor.mode(newMode)
 }
 
 func (touchSensor *TouchSensor) Pressed() bool {
-  return touchSensor.sensor.value(0) == 1
+  return touchSensor.sensor.value(0) != 0
 }

@@ -2,6 +2,8 @@ package main
 
 type Bot struct {
   battery Battery
+
+  touchSensor TouchSensor
   colorSensorLeft ColorSensor
   colorSensorRight ColorSensor
   ultrasonicSensor UltrasonicSensor
@@ -15,6 +17,7 @@ type Bot struct {
 
 func (bot *Bot) ResetAllCaches()() {
   bot.battery.ResetCache()
+  bot.touchSensor.ResetCache()
   bot.colorSensorLeft.ResetCache()
   bot.colorSensorRight.ResetCache()
   bot.ultrasonicSensor.ResetCache()
