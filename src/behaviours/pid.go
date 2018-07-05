@@ -2,7 +2,8 @@ package main
 
 import "math"
 
-const KE = 40
+const KS = 5000.0
+const KE = 40.0
 const KP = 7.0
 const KI = 0.0
 const KD = 8.0
@@ -18,11 +19,12 @@ func PID() string {
   integral := integral + currentError;
   derivative := currentError - lastError
 
-  motorSpeed := (KP * currentError) + (KI * integral) + (KD * derivative);
+  motorSpeed := (KP * currentError) + (KI * integral) + (KD * derivative)
+  motorSpeed += (motorSpeed * math.Abs(motorSpeed)) / KS
   lastError = currentError;
 
-  leftMotorSpeed := min(max(BASE_SPEED + int(motorSpeed), -1000), 1000);
-  rightMotorSpeed := min(max(BASE_SPEED - int(motorSpeed), -1000), 1000);
+  leftMotorSpeed := min(max(BASE_SPEED + int(motorSpeed), -1000), 1000)
+  rightMotorSpeed := min(max(BASE_SPEED - int(motorSpeed), -1000), 1000)
 
   go bot.motorLeft.RunForever(leftMotorSpeed)
   go bot.motorRight.RunForever(rightMotorSpeed)
