@@ -7,6 +7,7 @@ const DO_WATER_TOWER = true
 const DO_CHEMICAL_SPILL = true
 
 var BEHAVIOUR = "lifted:start"
+// var BEHAVIOUR = "follow_line"
 
 var behavioursFunctions = map[string]func()string{
   "chemical_spill": SaveCan,

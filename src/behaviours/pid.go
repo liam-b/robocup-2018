@@ -3,11 +3,12 @@ package main
 import "math"
 
 const KS = 5000.0
-const KE = 40.0
+const KE = 85.0
+
 const KP = 7.0
-const KI = 0.0
-const KD = 8.0
-const BASE_SPEED = 320
+const KI = 0.30
+const KD = 10.0
+const BASE_SPEED = 300
 
 var lastError = 0.0
 var integral = 0.0
