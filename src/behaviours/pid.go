@@ -16,11 +16,11 @@ func PID() string {
   currentError := LineSensorError()
   currentError += (currentError * math.Abs(currentError)) / KE
 
-  integral := integral + currentError;
+  integral = integral + currentError;
   derivative := currentError - lastError
 
   motorSpeed := (KP * currentError) + (KI * integral) + (KD * derivative)
-  motorSpeed += (motorSpeed * math.Abs(motorSpeed)) / KS
+  // motorSpeed += (motorSpeed * math.Abs(motorSpeed)) / KS
   lastError = currentError;
 
   leftMotorSpeed := min(max(BASE_SPEED + int(motorSpeed), -1000), 1000)
