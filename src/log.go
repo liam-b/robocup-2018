@@ -17,9 +17,21 @@ const TEXT_END = "\x1b[0m"
 const TEXT_WHITE = ""
 
 var counter int
+var lastOutput string
+var sameOutputs int = 0
 
 func printLog(flag string, difference string, color string, name string, symbol string, method []string, text string) {
-  fmt.Println(TEXT_BLACK + difference + " " + pad(strconv.Itoa(counter), 5) + " " + TEXT_BOLD + "(" + flag + ")" + TEXT_END + " " + TEXT_BOLD + color + symbol + " " + strings.ToUpper(name) + TEXT_END + " " + TEXT_PURPLE + strings.Join(method, "") + TEXT_END + " " + text)
+  output := TEXT_BOLD + color + symbol + " " + strings.ToUpper(name) + TEXT_END + " " + TEXT_PURPLE + strings.Join(method, "") + TEXT_END + " " + text
+  if output == lastOutput { sameOutputs += 1 } else {
+    fmt.Printf("\n")
+    sameOutputs = 0
+  }
+  lastOutput = output
+  if sameOutputs >= 1 {
+    fmt.Printf("\r" + TEXT_BLACK + difference + " " + pad(strconv.Itoa(counter), 5) + TEXT_END + " " + output + " " + TEXT_BLACK + "[...] " + TEXT_END)
+  } else {
+    fmt.Printf(TEXT_BLACK + difference + " " + pad(strconv.Itoa(counter), 5) + TEXT_END + " " + output)
+  }
   counter += 1
 }
 
@@ -41,7 +53,7 @@ type Logger struct {
 func (logger Logger) New(initialMethod string) Logger {
   fmt.Println("  ____   ___  ____   ___   ____ _   _ ____    ____   ___  _  ___  \r\n |  _ \\ / _ \\| __ ) / _ \\ / ___| | | |  _ \\  |___ \\ / _ \\/ |( _ ) \r\n | |_) | | | |  _ \\| | | | |   | | | | |_) |   __) | | | | |/ _ \\ \r\n |  _ <| |_| | |_) | |_| | |___| |_| |  __/   / __/| |_| | | (_) |\r\n |_| \\_\\\\___/|____/ \\___/ \\____|\\___/|_|     |_____|\\___/|_|\\___/ \r\n          ")
   logger.startTime = time.Now()
-  fmt.Println(TEXT_BOLD + "TRACE " + TEXT_GREEN + "DEBUG " + TEXT_BLUE + "INFO " + TEXT_CYAN + "NOTICE " + /*TEXT_GREEN + "SUCCESS " + */TEXT_YELLOW + "WARN " + TEXT_RED + "ERROR " + "FATAL " + TEXT_END + TEXT_PURPLE + "method " + TEXT_BLACK + "meta " + TEXT_BOLD + "flag" + TEXT_END)
+  fmt.Println(TEXT_BOLD + "TRACE " + TEXT_GREEN + "DEBUG " + TEXT_BLUE + "INFO " + TEXT_CYAN + "NOTICE " + /*TEXT_GREEN + "SUCCESS " + */TEXT_YELLOW + "WARN " + TEXT_RED + "ERROR " + "FATAL " + TEXT_END + TEXT_PURPLE + "method " + TEXT_BLACK + "meta " + TEXT_END)
   if initialMethod != "" {
     logger.inc(initialMethod[1:])
   }
@@ -127,6 +139,10 @@ func (logger *Logger) fatal(text string) {
 
 func (logger Logger) value(text string) string {
   return TEXT_CYAN + text + TEXT_END
+}
+
+func (logger Logger) state(text string) string {
+  return TEXT_RED + text + TEXT_END
 }
 
 func (logger *Logger) handleOnceCall() {
