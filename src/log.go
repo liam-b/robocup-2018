@@ -22,16 +22,18 @@ var sameOutputs int = 0
 
 func printLog(flag string, difference string, color string, name string, symbol string, method []string, text string) {
   output := TEXT_BOLD + color + symbol + " " + strings.ToUpper(name) + TEXT_END + " " + TEXT_PURPLE + strings.Join(method, "") + TEXT_END + " " + text
-  if output == lastOutput { sameOutputs += 1 } else {
-    fmt.Printf("\n")
-    sameOutputs = 0
-  }
-  lastOutput = output
-  if sameOutputs >= 1 {
-    fmt.Printf("\r" + TEXT_BLACK + difference + " " + pad(strconv.Itoa(counter), 5) + TEXT_END + " " + output + " " + TEXT_BLACK + "[...] " + TEXT_END)
-  } else {
-    fmt.Printf(TEXT_BLACK + difference + " " + pad(strconv.Itoa(counter), 5) + TEXT_END + " " + output)
-  }
+  if LOG_MULTI_SAME_GROUPING {
+    if output == lastOutput { sameOutputs += 1 } else {
+      fmt.Printf("\n")
+      sameOutputs = 0
+    }
+    lastOutput = output
+    if sameOutputs >= 1 {
+      fmt.Printf("\r" + TEXT_BLACK + difference + " " + pad(strconv.Itoa(counter), 5) + TEXT_END + " " + output + " " + TEXT_BLACK + "[...]" + TEXT_END)
+    } else {
+      fmt.Printf(TEXT_BLACK + difference + " " + pad(strconv.Itoa(counter), 5) + TEXT_END + " " + output)
+    }
+  } else { fmt.Println(TEXT_BLACK + difference + " " + pad(strconv.Itoa(counter), 5) + TEXT_END + " " + output) }
   counter += 1
 }
 
