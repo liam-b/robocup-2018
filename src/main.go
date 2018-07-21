@@ -3,11 +3,13 @@ package main
 import "time"
 import "os/signal"
 import "os"
-import "strconv"
+// import "strconv"
 // import "fmt"
 
 var log Logger = Logger{flag: "test", level: LOG_LEVEL}.New(":start")
 var bot Bot
+
+// TODO: add useful starting params (eg. can turn direction)
 
 func main() {
   log.notice("program started")
@@ -64,14 +66,20 @@ func loop() {
     bot.ResetAllCaches()
     time.Sleep(time.Second / time.Duration(LOOP_SPEED))
 
-    Behave()
+    log.inc(":behave")
+      Behave()
+    log.dec()
+
     // FollowLine(true, true)
     // log.debug(BEHAVIOUR + ", " + strconv.Itoa(int(float64(2550 - bot.ultrasonicSensor.Distance()) / 2.55)))
-    // log.debug(BEHAVIOUR + ", " + strconv.Itoa(totalAngle))
-    log.debug(BEHAVIOUR + ", " + "l: " + strconv.Itoa(bot.colorSensorLeft.RgbIntensity()) + " r: " + strconv.Itoa(bot.colorSensorRight.RgbIntensity()))
+    // log.debug(BEHAVIOUR + ", " + strconv.Itoa(bot.imu.ReadGyro()))
+    // log.debug(BEHAVIOUR + ", " + "l: " + strconv.Itoa(bot.colorSensorLeft.RgbIntensity()) + " r: " + strconv.Itoa(bot.colorSensorRight.RgbIntensity()))
     // log.debug(strconv.Itoa(bot.colorSensorLeft.RgbIntensity() - bot.colorSensorRight.RgbIntensity()))
     // PID()
     // log.debug(strconv.FormatBool())
+
+    // leftCol, rightCol := GetColors()
+    // log.debug(BEHAVIOUR + ", " + "l: " + leftCol + " r: " + rightCol)
 
     // _, leftGreen, _ := bot.colorSensorLeft.Rgb()
     // _, rightGreen, _ := bot.colorSensorRight.Rgb()
@@ -99,7 +107,7 @@ func end(catch string) {
   log.set(":end")
   log.trace("caught " + log.value(catch))
   log.notice("exiting program")
-  log.level = 0
+  log.end()
 
   time.Sleep(time.Millisecond * time.Duration(END_DELAY))
 

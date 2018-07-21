@@ -29,7 +29,7 @@ func printLog(flag string, difference string, color string, name string, symbol 
     }
     lastOutput = output
     if sameOutputs >= 1 {
-      fmt.Printf("\r" + TEXT_BLACK + difference + " " + pad(strconv.Itoa(counter), 5) + TEXT_END + " " + output + " " + TEXT_BLACK + "[...]" + TEXT_END)
+      fmt.Printf("\r" + TEXT_BLACK + difference + " " + pad(strconv.Itoa(counter), 5) + TEXT_END + " " + output + " " + TEXT_BLACK + "+" + strconv.Itoa(sameOutputs) + TEXT_END)
     } else {
       fmt.Printf(TEXT_BLACK + difference + " " + pad(strconv.Itoa(counter), 5) + TEXT_END + " " + output)
     }
@@ -145,6 +145,11 @@ func (logger Logger) value(text string) string {
 
 func (logger Logger) state(text string) string {
   return TEXT_RED + text + TEXT_END
+}
+
+func (logger *Logger) end() {
+  logger.level = 0
+  fmt.Printf("\n")
 }
 
 func (logger *Logger) handleOnceCall() {

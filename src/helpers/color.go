@@ -1,8 +1,10 @@
 package main
 
 const RGB_GREEN_DIFFERENCE = 6
-const RGB_SILVER_VALUE = 36
+const RGB_SILVER_VALUE = 32
 const RGB_BLACK_VALUE = 9
+
+var liftedMatches = 0
 
 func GetColors() (string, string) {
   leftRed, leftGreen, leftBlue := bot.colorSensorLeft.Rgb()
@@ -40,4 +42,26 @@ func DetectedSilver() bool {
 func DetectedGreen(sensor int) bool {
   left, right := GetColors()
   return (sensor == LEFT && left == GREEN) || (sensor == RIGHT && right == GREEN)
+}
+
+func LineSensorError() float64 {
+  return float64(bot.colorSensorLeft.RgbIntensity() - bot.colorSensorRight.RgbIntensity())
+}
+
+func BotLifted(count int) bool {
+  if bot.colorSensorLeft.RgbIntensity() == 0 && bot.colorSensorRight.RgbIntensity() == 0 {
+    liftedMatches += 1
+  } else {
+    liftedMatches = 0
+  }
+
+  if liftedMatches > count {
+    liftedMatches = 0
+    return true
+  }
+  return false
+}
+
+func BotPlacedDown() bool {
+  return bot.colorSensorLeft.RgbIntensity() > 1 && bot.colorSensorRight.RgbIntensity() > 1
 }

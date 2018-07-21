@@ -17,6 +17,7 @@ var waterTowerVerifyAttempts = 0
 
 func AvoidWaterTower() string {
   if STATE(":start") {
+    BehaviourDebug("starting " + log.state(":verify") + " of water tower")
     go bot.motorRight.RunForever(WATER_TOWER_VERIFY_SPEED)
     go bot.motorLeft.RunForever(WATER_TOWER_VERIFY_SPEED)
     waterTowerVerifyAttempts = 0
@@ -24,20 +25,25 @@ func AvoidWaterTower() string {
   }
 
   if STATE(":verify") {
+    BehaviourTrace("verifying water tower with ultrasonic sensor")
     if (DetectedWaterTower(WATER_TOWER_VERIFY_DISTANCE, WATER_TOWER_VERIFY_COUNT)) {
+      BehaviourDebug("starting " + log.state(":turn") + " to line up for " + log.state(":avoid"))
       go bot.motorRight.RunForever(WATER_TOWER_TURN_SPEED)
       go bot.motorLeft.RunForever(-WATER_TOWER_TURN_SPEED)
       return "water_tower:turn"
     } else {
       waterTowerVerifyAttempts += 1
       if waterTowerVerifyAttempts > WATER_TOWER_VERIFY_ATTEMPTS {
+        BehaviourDebug("water tower not verified within count, returning to " + log.state("follow_line"))
         return "follow_line"
       }
     }
   }
 
   if STATE(":turn") {
+    BehaviourTrace("turning to line up for " + log.state(":avoid"))
     if GyroTurnedToAngle(WATER_TOWER_TURN_ANGLE, LEFT) {
+      BehaviourDebug("turned to correct gyro angle, starting to " + log.state(":avoid"))
       go bot.motorLeft.RunForever(int(float64(WATER_TOWER_AVOID_SPEED) * 1.0))
       go bot.motorRight.RunForever(int(float64(WATER_TOWER_AVOID_SPEED) * WATER_TOWER_AVOID_RATIO))
       return "water_tower:avoid"
@@ -45,8 +51,10 @@ func AvoidWaterTower() string {
   }
 
   if STATE(":avoid") {
+    BehaviourTrace("avoiding water tower")
     color, _ :=  GetColors()
     if color == BLACK {
+      BehaviourDebug("found line after " + log.state(":avoid") + ", moving to " + log.state(":recapture"))
       go bot.motorRight.RunForever(WATER_TOWER_RECAPTURE_SPEED)
       go bot.motorLeft.RunForever(-WATER_TOWER_RECAPTURE_SPEED)
       return "water_tower:recapture"
@@ -54,7 +62,9 @@ func AvoidWaterTower() string {
   }
 
   if STATE(":recapture") {
+    BehaviourTrace("recapturing line")
     if GyroTurnedToAngle(WATER_TOWER_RECAPTURE_ANGLE, LEFT) {
+      BehaviourDebug("finished recapturing line, returning to " + log.state("follow_line"))
       return "follow_line"
     }
     // FollowLine()

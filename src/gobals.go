@@ -7,6 +7,7 @@ const LOOP_SPEED = 35
 const SENSOR_INIT_DELAY = 200
 const START_LOOP_DELAY = 300
 const END_DELAY = 200
+const LOG_MULTI_SAME_GROUPING = true
 
 const NONE = "none"
 const BLACK = "black"

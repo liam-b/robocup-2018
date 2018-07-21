@@ -1,5 +1,9 @@
 package main
 
+// func UpdateGyroAngle(int gyroValue) {
+//
+// }
+
 var totalAngle = 0
 
 func GyroTurnedToAngle(angle int, turnDirection int) bool {
@@ -16,4 +20,13 @@ func GyroTurnedToAngle(angle int, turnDirection int) bool {
   }
 
   return false
+}
+
+func GyroTotalRotation() int {
+  totalAngle += bot.imu.ReadGyro()
+  return totalAngle
+}
+
+func ResetGyroTotalRotation() {
+  totalAngle = 0
 }

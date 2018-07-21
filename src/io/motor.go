@@ -23,30 +23,6 @@ func (motor Motor) RunForever(speed int) {
   motor.indexedDevice.set("command", "run-forever")
 }
 
-func (motor Motor) RunToPosition(speed int, position int) {
-  speedString := strconv.Itoa(speed)
-  positionString := strconv.Itoa(position)
-  motor.indexedDevice.set("speed_sp", speedString)
-  motor.indexedDevice.set("position_sp", positionString)
-  motor.indexedDevice.set("command", "run-to-abs-pos")
-}
-
-func (motor Motor) RunToRelativePosition(speed int, position int) {
-  speedString := strconv.Itoa(speed)
-  positionString := strconv.Itoa(position)
-  motor.indexedDevice.set("speed_sp", speedString)
-  motor.indexedDevice.set("position_sp", positionString)
-  motor.indexedDevice.set("command", "run-to-rel-pos")
-}
-
-func (motor Motor) RunTimed(speed int, time int) {
-  speedString := strconv.Itoa(speed)
-  timeString := strconv.Itoa(time)
-  motor.indexedDevice.set("speed_sp", speedString)
-  motor.indexedDevice.set("time_sp", timeString)
-  motor.indexedDevice.set("command", "run-timed")
-}
-
 func (motor Motor) Stop() {
   motor.indexedDevice.set("command", "stop")
 }
@@ -54,6 +30,19 @@ func (motor Motor) Stop() {
 func (motor Motor) State() []string {
   states := motor.indexedDevice.get("state")
   return strings.Split(states, " ")
+}
+
+func (motor Motor) GetPosition() int {
+  position := motor.indexedDevice.get("position")
+  position = strings.TrimSuffix(position, "\n")
+  result, _ := strconv.Atoi(position)
+
+  return result
+}
+
+func (motor Motor) SetPosition(position int) {
+  positionString := strconv.Itoa(position)
+  motor.indexedDevice.set("position", positionString)
 }
 
 type DriveMotors struct {

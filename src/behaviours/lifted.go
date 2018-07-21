@@ -4,6 +4,7 @@ const LIFTED_DETECT_COUNT = 3
 
 func Lifted() string {
   if STATE(":start") {
+    BehaviourDebug("bot has been picked up and is moving to " + log.state(":wait") + " until placed down")
     ResetHelpers()
     go bot.motorRight.Stop()
     go bot.motorLeft.Stop()
@@ -12,7 +13,11 @@ func Lifted() string {
   }
 
   if STATE(":wait") {
-    if BotPlacedDown() && bot.touchSensor.Pressed() { return "follow_line" }
+    BehaviourTrace("waiting for bot to be placed down")
+    if BotPlacedDown() && bot.touchSensor.Pressed() {
+      BehaviourDebug("bot has been placed down, returning to " + log.state("follow_line"))
+      return "follow_line"
+    }
   }
 
   return BEHAVIOUR

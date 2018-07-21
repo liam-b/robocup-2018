@@ -30,5 +30,13 @@ func PID() string {
   go bot.motorLeft.RunForever(leftMotorSpeed)
   go bot.motorRight.RunForever(rightMotorSpeed)
 
+  if BEHAVIOUR == "follow_line" {
+    BehaviourDebug("following line with pid")
+    return "follow_line:follow"
+  }
+
+  if STATE(":follow") {
+    BehaviourTrace("using pid to follow line")
+  }
   return BEHAVIOUR
 }
