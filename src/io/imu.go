@@ -10,7 +10,6 @@ type IMU struct {
   i2cDevice *I2C
 
   cachedValue int
-  hasCached bool
 }
 
 func (imu IMU) New() IMU {
@@ -19,17 +18,15 @@ func (imu IMU) New() IMU {
 }
 
 func (imu *IMU) ResetCache() {
-  imu.cachedValue = 0
-  imu.hasCached = false
+  imu.cachedValue += imu.getGyroValue()
 }
 
-func (imu *IMU) ReadGyro() int {
-  if imu.hasCached { return imu.cachedValue }
-  result := imu.getGyroValue()
-  imu.hasCached = true
-  imu.cachedValue = result
+func (imu IMU) GyroValue() int {
+  return imu.cachedValue
+}
 
-  return result
+func (imu *IMU) ResetGyro() {
+  imu.cachedValue = 0
 }
 
 func (imu IMU) Cleanup() {

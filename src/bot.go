@@ -15,7 +15,7 @@ type Bot struct {
   ledshim Ledshim
 }
 
-func (bot *Bot) ResetAllCaches()() {
+func (bot *Bot) ResetAllCaches() {
   bot.battery.ResetCache()
   bot.touchSensor.ResetCache()
   bot.colorSensorLeft.ResetCache()

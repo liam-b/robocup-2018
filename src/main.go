@@ -72,7 +72,7 @@ func loop() {
 
     // FollowLine(true, true)
     // log.debug(BEHAVIOUR + ", " + strconv.Itoa(int(float64(2550 - bot.ultrasonicSensor.Distance()) / 2.55)))
-    // log.debug(BEHAVIOUR + ", " + strconv.Itoa(bot.imu.ReadGyro()))
+    // log.debug(BEHAVIOUR + ", " + strconv.Itoa(bot.imu.GyroValue()))
     // log.debug(BEHAVIOUR + ", " + "l: " + strconv.Itoa(bot.colorSensorLeft.RgbIntensity()) + " r: " + strconv.Itoa(bot.colorSensorRight.RgbIntensity()))
     // log.debug(strconv.Itoa(bot.colorSensorLeft.RgbIntensity() - bot.colorSensorRight.RgbIntensity()))
     // PID()
