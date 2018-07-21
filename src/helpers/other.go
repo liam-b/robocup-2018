@@ -39,7 +39,6 @@ func SpeedRatio(speed int, ratio float64, sign int) int {
 func ResetHelpers() {
   liftedMatches = 0
   waterTowerMatches = 0
-  totalAngle = 0
   canMatches = 0
 }
 

@@ -1,13 +1,13 @@
 package main
 
-const DO_GREEN_TURN = true
-const DO_WATER_TOWER = true
-const DO_CHEMICAL_SPILL = true
 const DO_BOT_LIFTED = true
+const DO_GREEN_TURN = false
+const DO_WATER_TOWER = false
+const DO_CHEMICAL_SPILL = false
 
-// var BEHAVIOUR = "lifted:start"
+var BEHAVIOUR = "lifted:start"
 // var BEHAVIOUR = "turn_green:start.left"
-var BEHAVIOUR = "follow_line"
+// var BEHAVIOUR = "follow_line"
 
 var behaviourFunctions = map[string]func()string{
   "chemical_spill": SaveCan,

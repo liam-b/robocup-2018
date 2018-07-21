@@ -11,6 +11,7 @@ func TurnOnGreen() string {
   if STATE(":start") {
     BehaviourDebug("starting " + log.state(":turn"))
     greenOverride = 0
+    bot.imu.ResetGyro()
     return "turn_green:turn" + PARAMS()
   }
 
@@ -24,7 +25,7 @@ func TurnOnGreen() string {
     }
 
     if PARAM(".left") {
-      if GyroTurnedToAngle(GREEN_FINISH_ANGLE, LEFT) {
+      if bot.imu.GyroValue() > GREEN_FINISH_ANGLE {
         BehaviourDebug("going into " + log.state(":cooldown") + " after turn")
         greenCooldown = 0
         return "turn_green:cooldown"
@@ -33,7 +34,7 @@ func TurnOnGreen() string {
     }
 
     if PARAM(".right") {
-      if GyroTurnedToAngle(-GREEN_FINISH_ANGLE, RIGHT) {
+      if bot.imu.GyroValue() < -GREEN_FINISH_ANGLE {
         BehaviourDebug("going into " + log.state(":cooldown") + " after turn")
         greenCooldown = 0
         return "turn_green:cooldown"
