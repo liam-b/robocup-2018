@@ -11,6 +11,7 @@ type Bot struct {
 
   motorLeft Motor
   motorRight Motor
+  motorClaw Motor
 
   ledshim Ledshim
 }

@@ -23,10 +23,12 @@ func main() {
       colorSensorRight: ColorSensor{Port: S2}.New(),
       colorSensorLeft: ColorSensor{Port: S3}.New(),
       ultrasonicSensor: UltrasonicSensor{Port: S4}.New(),
+
       imu: IMU{Address: 0x68}.New(),
 
       motorLeft: Motor{Port: MC}.New(),
       motorRight: Motor{Port: MB}.New(),
+      motorClaw: Motor{Port: MA}.New(),
 
       ledshim: Ledshim{Address: 0x75}.New(),
     }
@@ -54,6 +56,8 @@ func main() {
     BatteryStatus()
   log.dec()
 
+  HalfOpenClaw()
+
   time.Sleep(time.Millisecond * time.Duration(START_LOOP_DELAY))
   bot.ledshim.SetPixel(SCOPE_PIXEL, COLOR_GREEN)
   log.info("looping")
@@ -77,6 +81,17 @@ func loop() {
     // log.debug(strconv.Itoa(bot.colorSensorLeft.RgbIntensity() - bot.colorSensorRight.RgbIntensity()))
     // PID()
     // log.debug(strconv.FormatBool())
+
+    // if contains(bot.motorClaw.State(), "overloaded") {
+    //   log.trace("overloaded")
+    //   bot.motorClaw.Stop()
+    // }
+    // if /* bot.motorClaw.GetPosition() > 80 */ bot.motorClaw.GetPosition() > 40 {
+    //   log.trace("stahp")
+    //   bot.motorClaw.Stop()
+    // }
+
+    // fmt.Println(bot.motorClaw.State())
 
     // leftCol, rightCol := GetColors()
     // log.debug(BEHAVIOUR + ", " + "l: " + leftCol + " r: " + rightCol)
@@ -113,6 +128,7 @@ func end(catch string) {
 
   bot.motorLeft.Stop()
   bot.motorRight.Stop()
+  bot.motorClaw.Stop()
   bot.imu.Cleanup()
   bot.ledshim.Clear()
 
