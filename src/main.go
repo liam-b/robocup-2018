@@ -56,7 +56,9 @@ func main() {
     BatteryStatus()
   log.dec()
 
-  HalfOpenClaw()
+  SetupClaw()
+
+  bot.motorClaw.RunToPosition(CLAW_TOTAL_DISTANCE / 2, CLAW_SPEED)
 
   time.Sleep(time.Millisecond * time.Duration(START_LOOP_DELAY))
   bot.ledshim.SetPixel(SCOPE_PIXEL, COLOR_GREEN)
@@ -126,9 +128,9 @@ func end(catch string) {
 
   time.Sleep(time.Millisecond * time.Duration(END_DELAY))
 
+  CleanupClaw()
   bot.motorLeft.Stop()
   bot.motorRight.Stop()
-  bot.motorClaw.Stop()
   bot.imu.Cleanup()
   bot.ledshim.Clear()
 

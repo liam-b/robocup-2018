@@ -28,11 +28,23 @@ func (motor Motor) RunToPosition(position int, speed int) {
   positionString := strconv.Itoa(position)
   motor.indexedDevice.set("speed_sp", speedString)
   motor.indexedDevice.set("position_sp", positionString)
+  motor.indexedDevice.set("command", "run-to-rel-pos")
+}
+
+func (motor Motor) RunToAbsolutePosition(position int, speed int) {
+  speedString := strconv.Itoa(speed)
+  positionString := strconv.Itoa(position)
+  motor.indexedDevice.set("speed_sp", speedString)
+  motor.indexedDevice.set("position_sp", positionString)
   motor.indexedDevice.set("command", "run-to-abs-pos")
 }
 
 func (motor Motor) Stop() {
   motor.indexedDevice.set("command", "stop")
+}
+
+func (motor Motor) StopAction(action string) {
+  motor.indexedDevice.set("stop_action", action)
 }
 
 func (motor Motor) State() []string {

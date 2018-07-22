@@ -1,24 +1,49 @@
 package main
 
-const CLAW_SIZE_POSITION = 100
+const CLAW_TOTAL_DISTANCE = 90
 const CLAW_SPEED = 100
 
-func OpenClaw() {
+const CLAW_OPEN = 2
+const CLAW_HALF = 1
+const CLAW_CLOSED = 0
+
+var CLAW_POSITION = 0
+
+func SetupClaw() {
+  // bot.motorClaw.Stop()
   bot.motorClaw.SetPosition(0)
-  bot.motorClaw.RunToPosition(CLAW_SIZE_POSITION, CLAW_SPEED)
+  bot.motorClaw.StopAction("brake")
+  HalfOpenClaw()
+}
+
+func CleanupClaw() {
+  bot.motorClaw.RunToAbsolutePosition(0, 100)
+}
+
+func OpenClaw() {
+  if CLAW_POSITION == CLAW_CLOSED {
+    go bot.motorClaw.RunToPosition(CLAW_TOTAL_DISTANCE, CLAW_SPEED)
+    CLAW_POSITION = CLAW_OPEN
+  }
 }
 
 func CloseClaw() {
-  bot.motorClaw.SetPosition(0)
-  bot.motorClaw.RunToPosition(-CLAW_SIZE_POSITION, CLAW_SPEED)
+  if CLAW_POSITION == CLAW_OPEN {
+    go bot.motorClaw.RunToPosition(-CLAW_TOTAL_DISTANCE, CLAW_SPEED)
+    CLAW_POSITION = CLAW_CLOSED
+  }
 }
 
 func HalfOpenClaw() {
-  bot.motorClaw.SetPosition(0)
-  bot.motorClaw.RunToPosition(CLAW_SIZE_POSITION / 2, CLAW_SPEED)
+  if CLAW_POSITION != CLAW_OPEN {
+    go bot.motorClaw.RunToPosition(CLAW_TOTAL_DISTANCE / 2, CLAW_SPEED)
+    CLAW_POSITION += CLAW_HALF
+  }
 }
 
 func HalfCloseClaw() {
-  bot.motorClaw.SetPosition(0)
-  bot.motorClaw.RunToPosition(-CLAW_SIZE_POSITION / 2, CLAW_SPEED)
+  if CLAW_POSITION != CLAW_CLOSED {
+    go bot.motorClaw.RunToPosition(-CLAW_TOTAL_DISTANCE / 2, CLAW_SPEED)
+    CLAW_POSITION -= CLAW_HALF
+  }
 }

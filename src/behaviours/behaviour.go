@@ -1,9 +1,9 @@
 package main
 
 const DO_BOT_LIFTED = true
-const DO_GREEN_TURN = false
-const DO_WATER_TOWER = false
-const DO_CHEMICAL_SPILL = false
+const DO_GREEN_TURN = true
+const DO_WATER_TOWER = true
+const DO_CHEMICAL_SPILL = true
 
 var BEHAVIOUR = "lifted:start"
 // var BEHAVIOUR = "turn_green:start.left"
