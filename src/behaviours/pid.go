@@ -5,7 +5,7 @@ import "math"
 // import "strconv"
 
 const KS = 5000.0
-const KE = 85.0
+const KE = 89.0
 
 const KP = 7.0
 const KI = 0.32
