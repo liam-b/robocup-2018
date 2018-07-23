@@ -109,6 +109,10 @@ func (ultrasonicSensor UltrasonicSensor) Mode(newMode string) {
 }
 
 func (ultrasonicSensor *UltrasonicSensor) Distance() int {
+  return int(float64(2550 - ultrasonicSensor.sensor.value(0)) / 2.55)
+}
+
+func (ultrasonicSensor *UltrasonicSensor) RawDistance() int {
   return int(ultrasonicSensor.sensor.value(0))
 }
 

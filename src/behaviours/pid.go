@@ -1,6 +1,8 @@
 package main
 
 import "math"
+// import "fmt"
+// import "strconv"
 
 const KS = 5000.0
 const KE = 85.0
@@ -8,7 +10,7 @@ const KE = 85.0
 const KP = 7.0
 const KI = 0.32
 const KD = 11.0
-const BASE_SPEED = 300
+const BASE_SPEED = 270
 
 var lastError = 0.0
 var integral = 0.0
@@ -19,6 +21,10 @@ func PID() string {
 
   integral = integral + currentError;
   derivative := currentError - lastError
+
+  // if int(currentError) > -3 && int(currentError) < 3 {
+  //   integral = 0
+  // }
 
   motorSpeed := (KP * currentError) + (KI * integral) + (KD * derivative)
   // motorSpeed += (motorSpeed * math.Abs(motorSpeed)) / KS

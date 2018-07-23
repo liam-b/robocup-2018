@@ -10,6 +10,7 @@ var log Logger = Logger{flag: "test", level: LOG_LEVEL}.New(":start")
 var bot Bot
 
 // TODO: add useful starting params (eg. can turn direction)
+// TODO: add chemical_spill alignment
 
 func main() {
   log.notice("program started")
@@ -77,7 +78,7 @@ func loop() {
     log.dec()
 
     // FollowLine(true, true)
-    // log.debug(BEHAVIOUR + ", " + strconv.Itoa(int(float64(2550 - bot.ultrasonicSensor.Distance()) / 2.55)))
+    // log.debug(BEHAVIOUR + ", " + strconv.Itoa(bot.ultrasonicSensor.RawDistance()))
     // log.debug(BEHAVIOUR + ", " + strconv.Itoa(bot.imu.GyroValue()))
     // log.debug(BEHAVIOUR + ", " + "l: " + strconv.Itoa(bot.colorSensorLeft.RgbIntensity()) + " r: " + strconv.Itoa(bot.colorSensorRight.RgbIntensity()))
     // log.debug(strconv.Itoa(bot.colorSensorLeft.RgbIntensity() - bot.colorSensorRight.RgbIntensity()))

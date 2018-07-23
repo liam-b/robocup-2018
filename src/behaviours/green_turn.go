@@ -24,10 +24,19 @@ func TurnOnGreen() string {
       return "follow_line"
     }
 
+    left, right := GetColors()
+    if left == GREEN && right == GREEN {
+      go bot.motorRight.Stop()
+      go bot.motorLeft.Stop()
+      BehaviourDebug("found both sensors on green, switching to " + log.state("chemical_spill"))
+      return "chemical_spill:verify"
+    }
+
     if PARAM(".left") {
       if bot.imu.GyroValue() > GREEN_FINISH_ANGLE {
         BehaviourDebug("going into " + log.state(":cooldown") + " after turn")
         greenCooldown = 0
+        integral = 0
         return "turn_green:cooldown"
       }
       OneSensorLineFollowing(LEFT)
@@ -37,6 +46,7 @@ func TurnOnGreen() string {
       if bot.imu.GyroValue() < -GREEN_FINISH_ANGLE {
         BehaviourDebug("going into " + log.state(":cooldown") + " after turn")
         greenCooldown = 0
+        integral = 0
         return "turn_green:cooldown"
       }
       OneSensorLineFollowing(RIGHT)

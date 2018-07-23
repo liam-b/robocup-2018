@@ -4,7 +4,7 @@ var waterTowerMatches = 0
 var canMatches = 0
 
 func DetectedWaterTower(distance int, count int) bool {
-  value := int(float64(2550 - bot.ultrasonicSensor.Distance()) / 2.55)
+  value := bot.ultrasonicSensor.Distance()
 
   if value > distance {
     waterTowerMatches += 1
@@ -20,7 +20,7 @@ func DetectedWaterTower(distance int, count int) bool {
 }
 
 func DetectedCan(distance int, count int) bool {
-  value := int(float64(2550 - bot.ultrasonicSensor.Distance()) / 2.55)
+  value := bot.ultrasonicSensor.Distance()
 
   if value > distance {
     canMatches += 1
@@ -36,7 +36,7 @@ func DetectedCan(distance int, count int) bool {
 }
 
 func LostCan(distance int, count int) bool {
-  value := int(float64(2550 - bot.ultrasonicSensor.Distance()) / 2.55)
+  value := bot.ultrasonicSensor.Distance()
 
   if value < distance {
     canMatches += 1

@@ -24,12 +24,18 @@ func OpenClaw() {
   if CLAW_POSITION == CLAW_CLOSED {
     go bot.motorClaw.RunToPosition(CLAW_TOTAL_DISTANCE, CLAW_SPEED)
     CLAW_POSITION = CLAW_OPEN
+  } else if CLAW_POSITION == CLAW_HALF {
+    go bot.motorClaw.RunToPosition(CLAW_TOTAL_DISTANCE / 2, CLAW_SPEED)
+    CLAW_POSITION = CLAW_OPEN
   }
 }
 
 func CloseClaw() {
   if CLAW_POSITION == CLAW_OPEN {
     go bot.motorClaw.RunToPosition(-CLAW_TOTAL_DISTANCE, CLAW_SPEED)
+    CLAW_POSITION = CLAW_CLOSED
+  } else if CLAW_POSITION == CLAW_HALF {
+    go bot.motorClaw.RunToPosition(-CLAW_TOTAL_DISTANCE / 2, CLAW_SPEED)
     CLAW_POSITION = CLAW_CLOSED
   }
 }

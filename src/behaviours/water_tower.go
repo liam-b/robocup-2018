@@ -1,6 +1,6 @@
 package main
 
-const WATER_TOWER_DETECT_DISTANCE = 910
+const WATER_TOWER_DETECT_DISTANCE = 920
 const WATER_TOWER_DETECT_COUNT = 4
 const WATER_TOWER_VERIFY_DISTANCE = WATER_TOWER_DETECT_DISTANCE + 10
 const WATER_TOWER_VERIFY_COUNT = 5
@@ -57,7 +57,7 @@ func AvoidWaterTower() string {
     if color == BLACK {
       BehaviourDebug("found line after " + log.state(":avoid") + ", moving to " + log.state(":recapture"))
       go bot.motorRight.RunForever(WATER_TOWER_RECAPTURE_SPEED)
-      go bot.motorLeft.RunForever(-WATER_TOWER_RECAPTURE_SPEED)
+      go bot.motorLeft.RunForever(-int(WATER_TOWER_RECAPTURE_SPEED / 2))
       bot.imu.ResetGyro()
       return "water_tower:recapture"
     }
@@ -69,7 +69,6 @@ func AvoidWaterTower() string {
       BehaviourDebug("finished recapturing line, returning to " + log.state("follow_line"))
       return "follow_line"
     }
-    // FollowLine() single
   }
 
   return BEHAVIOUR
