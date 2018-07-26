@@ -2,14 +2,17 @@ package main
 
 import "math"
 // import "fmt"
-// import "strconv"
+import "strconv"
 
-const KS = 5000.0
-const KE = 89.0
+// const KS = 5000.0
+const KE = 85.0
 
-const KP = 7.0
+// const KP = 8.0
+// const KI = 0.3
+// const KD = 0.0
+const KP = 7.5
 const KI = 0.32
-const KD = 11.0
+const KD = 10.0
 const BASE_SPEED = 270
 
 var lastError = 0.0
@@ -42,7 +45,12 @@ func PID() string {
   }
 
   if STATE(":follow") {
-    BehaviourTrace("using pid to follow line")
+    // BehaviourTrace("using pid to follow line")
+    BehaviourTrace("p: " + strconv.Itoa(int(currentError)) + ", i: " + strconv.Itoa(int(integral)) + ", d: " + strconv.Itoa(int(derivative)))
   }
   return BEHAVIOUR
+}
+
+func ResetPID() {
+  integral = 0
 }

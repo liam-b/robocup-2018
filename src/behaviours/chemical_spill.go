@@ -14,11 +14,11 @@ const SAVE_CAN_SEARCH_CAN_COUNT = 7
 
 const SAVE_CAN_SAVE_SPEED = 170
 
-const SAVE_CAN_ESCAPE_TURN_SPEED = 100
-  const SAVE_CAN_ESCAPE_TURN_FUDGE_ANGLE = 100
+const SAVE_CAN_ESCAPE_TURN_SPEED = 70
+const SAVE_CAN_ESCAPE_TURN_FUDGE_ANGLE = 0.07
 
 const SAVE_CAN_SAVE_POSITION = 200
-const SAVE_CAN_SAVE_REMOVE_POSITION = 500
+const SAVE_CAN_SAVE_REMOVE_POSITION = 520
 
 var chemicalSpillVerifyAttempts = 0
 var searchGyroAngle = 0
@@ -139,7 +139,7 @@ func SaveCan() string {
 
   if STATE(":escape:turn") {
     BehaviourTrace("turning to exit angle")
-    if bot.imu.GyroValue() < SAVE_CAN_ESCAPE_TURN_FUDGE_ANGLE {
+    if bot.imu.GyroValue() < int(float64(searchGyroAngle) * SAVE_CAN_ESCAPE_TURN_FUDGE_ANGLE) {
       BehaviourDebug("correct alignment with exit, moving to " + log.state(":escape:exit"))
       go bot.motorRight.RunForever(-SAVE_CAN_ENTER_SPEED)
       go bot.motorLeft.RunForever(-SAVE_CAN_ENTER_SPEED)
