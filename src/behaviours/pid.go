@@ -23,8 +23,8 @@ func PID() string {
   currentError := float64(LineSensorError())
   currentError += (currentError * math.Abs(currentError)) / ERROR_CURVE
 
-  integral = integral + currentError * (1 / LOOP_SPEED)
-  doubleIntegral = doubleIntegral + integral
+  integral += currentError * (1 / LOOP_SPEED)
+  doubleIntegral += integral * (1 / LOOP_SPEED)
   derivative := currentError - lastError
   doubleDerivative := derivative - lastDerivative
 

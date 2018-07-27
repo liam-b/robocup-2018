@@ -10,7 +10,7 @@ var log Logger = Logger{flag: "test", level: LOG_LEVEL}.New(":start")
 var bot Bot
 
 // TODO: add useful starting params (eg. can turn direction)
-// TODO: add chemical_spill alignment
+// TODO: add chemical_spill entrance alignment
 
 func main() {
   log.notice("program started")
