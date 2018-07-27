@@ -4,40 +4,37 @@ import "math"
 // import "fmt"
 import "strconv"
 
-// const KS = 5000.0
-const KE = 85.0
+const ERROR_CURVE = 100.0
 
-// const KP = 8.0
-// const KI = 0.3
-// const KD = 0.0
-const KP = 7.5
-const KI = 0.32
-const KD = 10.0
+const PROPORTIONAL = 5.0
+const INTEGRAL = 0.0
+const DOUBLE_INTEGRAL = 0.0
+const DERIVATIVE = 0.0
+const DOUBLE_DERIVATIVE = 0.0
+
 const BASE_SPEED = 270
 
 var lastError = 0.0
+var lastDerivative = 0.0
 var integral = 0.0
+var doubleIntegral = 0.0
 
 func PID() string {
-  currentError := LineSensorError()
-  currentError += (currentError * math.Abs(currentError)) / KE
+  currentError := float64(LineSensorError())
+  currentError += (currentError * math.Abs(currentError)) / ERROR_CURVE
 
-  integral = integral + currentError;
+  integral = integral + currentError * (1 / LOOP_SPEED)
+  doubleIntegral = doubleIntegral + integral
   derivative := currentError - lastError
+  doubleDerivative := derivative - lastDerivative
 
-  // if int(currentError) > -3 && int(currentError) < 3 {
-  //   integral = 0
-  // }
+  motorSpeed := (PROPORTIONAL * currentError) + (INTEGRAL * integral) + (DOUBLE_INTEGRAL * doubleIntegral) + (DERIVATIVE * derivative) + (DOUBLE_DERIVATIVE * doubleDerivative)
 
-  motorSpeed := (KP * currentError) + (KI * integral) + (KD * derivative)
-  // motorSpeed += (motorSpeed * math.Abs(motorSpeed)) / KS
   lastError = currentError;
+  lastDerivative = derivative;
 
-  leftMotorSpeed := min(max(BASE_SPEED + int(motorSpeed), -1000), 1000)
-  rightMotorSpeed := min(max(BASE_SPEED - int(motorSpeed), -1000), 1000)
-
-  go bot.motorLeft.RunForever(leftMotorSpeed)
-  go bot.motorRight.RunForever(rightMotorSpeed)
+  go bot.motorLeft.RunForever(min(max(BASE_SPEED + int(motorSpeed), -1000), 1000))
+  go bot.motorRight.RunForever(min(max(BASE_SPEED - int(motorSpeed), -1000), 1000))
 
   if BEHAVIOUR == "follow_line" {
     BehaviourDebug("following line with pid")
@@ -46,11 +43,14 @@ func PID() string {
 
   if STATE(":follow") {
     // BehaviourTrace("using pid to follow line")
-    BehaviourTrace("p: " + strconv.Itoa(int(currentError)) + ", i: " + strconv.Itoa(int(integral)) + ", d: " + strconv.Itoa(int(derivative)))
+    BehaviourTrace("p: " + strconv.Itoa(int(currentError)) + ", i: " + strconv.Itoa(int(integral)) + ", 2i: " + strconv.Itoa(int(doubleIntegral)) + ", d: " + strconv.Itoa(int(derivative)) + ", 2d: " + strconv.Itoa(int(doubleDerivative)))
   }
   return BEHAVIOUR
 }
 
 func ResetPID() {
-  integral = 0
+  lastError = 0.0
+  lastDerivative = 0.0
+  integral = 0.0
+  doubleIntegral = 0.0
 }
