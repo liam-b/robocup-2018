@@ -2,15 +2,15 @@ package main
 
 import "math"
 // import "fmt"
-import "strconv"
+// import "strconv"
 
-const ERROR_CURVE = 100.0
+const ERROR_CURVE = 90.0
 
-const PROPORTIONAL = 5.0
-const INTEGRAL = 0.0
+const PROPORTIONAL = 7.0
+const INTEGRAL = 0.32
 const DOUBLE_INTEGRAL = 0.0
-const DERIVATIVE = 0.0
-const DOUBLE_DERIVATIVE = 0.0
+const DERIVATIVE = 9.0
+const DOUBLE_DERIVATIVE = 10.0
 
 const BASE_SPEED = 270
 
@@ -23,8 +23,8 @@ func PID() string {
   currentError := float64(LineSensorError())
   currentError += (currentError * math.Abs(currentError)) / ERROR_CURVE
 
-  integral += currentError * (1 / LOOP_SPEED)
-  doubleIntegral += integral * (1 / LOOP_SPEED)
+  integral += currentError //* (1 / LOOP_SPEED)
+  doubleIntegral += integral * (1.0 / LOOP_SPEED)
   derivative := currentError - lastError
   doubleDerivative := derivative - lastDerivative
 
@@ -42,8 +42,8 @@ func PID() string {
   }
 
   if STATE(":follow") {
-    // BehaviourTrace("using pid to follow line")
-    BehaviourTrace("p: " + strconv.Itoa(int(currentError)) + ", i: " + strconv.Itoa(int(integral)) + ", 2i: " + strconv.Itoa(int(doubleIntegral)) + ", d: " + strconv.Itoa(int(derivative)) + ", 2d: " + strconv.Itoa(int(doubleDerivative)))
+    BehaviourTrace("using pid to follow line")
+    // BehaviourTrace("p: " + strconv.Itoa(int(currentError)) + ", i: " + strconv.Itoa(int(integral)) + ", 2i: " + strconv.Itoa(int(doubleIntegral)) + ", d: " + strconv.Itoa(int(derivative)) + ", 2d: " + strconv.Itoa(int(doubleDerivative)))
   }
   return BEHAVIOUR
 }

@@ -1,7 +1,7 @@
 package main
 
 const CLAW_TOTAL_DISTANCE = 90
-const CLAW_SPEED = 100
+const CLAW_SPEED = 200
 
 const CLAW_OPEN = 2
 const CLAW_HALF = 1
@@ -17,7 +17,7 @@ func SetupClaw() {
 }
 
 func CleanupClaw() {
-  bot.motorClaw.RunToAbsolutePosition(0, 100)
+  bot.motorClaw.RunToAbsolutePosition(0, CLAW_SPEED)
 }
 
 func OpenClaw() {

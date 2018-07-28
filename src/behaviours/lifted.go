@@ -16,6 +16,7 @@ func Lifted() string {
     BehaviourTrace("waiting for bot to be placed down")
     if BotPlacedDown() && bot.touchSensor.Pressed() {
       BehaviourDebug("bot has been placed down, returning to " + log.state("follow_line"))
+      ResetPID()
       return "follow_line"
     }
   }

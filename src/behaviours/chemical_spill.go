@@ -8,17 +8,17 @@ const SAVE_CAN_VERIFY_ATTEMPTS = 30
 const SAVE_CAN_ENTER_SPEED = 300
 const SAVE_CAN_ENTER_POSITION = 570
 
-const SAVE_CAN_SEARCH_SPEED = 40
-const SAVE_CAN_SEARCH_CAN_DISTANCE = 800
+const SAVE_CAN_SEARCH_SPEED = 50
+const SAVE_CAN_SEARCH_CAN_DISTANCE = 810
 const SAVE_CAN_SEARCH_CAN_COUNT = 7
 
 const SAVE_CAN_SAVE_SPEED = 130
 
 const SAVE_CAN_ESCAPE_TURN_SPEED = 70
-const SAVE_CAN_ESCAPE_TURN_FUDGE_ANGLE = 0.07
+const SAVE_CAN_ESCAPE_TURN_FUDGE_ANGLE = 0.12
 
-const SAVE_CAN_SAVE_POSITION = 200
-const SAVE_CAN_SAVE_REMOVE_POSITION = 520
+const SAVE_CAN_SAVE_POSITION = 170
+const SAVE_CAN_SAVE_REMOVE_POSITION = 540
 
 var chemicalSpillVerifyAttempts = 0
 var searchGyroAngle = 0
@@ -69,8 +69,8 @@ func SaveCan() string {
   }
 
   if STATE(":search") {
-    BehaviourTrace("searching for first instance of can")
-    // log.info(strconv.Itoa(bot.ultrasonicSensor.Distance()))
+    // BehaviourTrace("searching for first instance of can")
+    log.trace(strconv.Itoa(bot.ultrasonicSensor.Distance()))
     if DetectedCan(SAVE_CAN_SEARCH_CAN_DISTANCE, SAVE_CAN_SEARCH_CAN_COUNT) {
       BehaviourDebug("found first instance of can, starting " + log.state(":search:found"))
       searchGyroAngle = bot.imu.GyroValue()
@@ -79,8 +79,8 @@ func SaveCan() string {
   }
 
   if STATE(":search:found") {
-    BehaviourTrace("searching for last instance of can")
-    // log.info(strconv.Itoa(bot.ultrasonicSensor.Distance()))
+    // BehaviourTrace("searching for last instance of can")
+    log.trace(strconv.Itoa(bot.ultrasonicSensor.Distance()))
     if LostCan(SAVE_CAN_SEARCH_CAN_DISTANCE, SAVE_CAN_SEARCH_CAN_COUNT) {
       BehaviourDebug("found last instance of can, now starting " + log.state(":search:align"))
       go bot.motorRight.RunForever(-SAVE_CAN_SEARCH_SPEED)
@@ -92,7 +92,7 @@ func SaveCan() string {
 
   if STATE(":search:align") {
     BehaviourTrace("re-aligning with center of can")
-    log.info(strconv.Itoa(bot.imu.GyroValue()) + ", " + strconv.Itoa(searchGyroAngle))
+    // log.info(strconv.Itoa(bot.imu.GyroValue()) + ", " + strconv.Itoa(searchGyroAngle))
     if bot.imu.GyroValue() < searchGyroAngle {
       BehaviourDebug("aligned to can and starting " + log.state(":save"))
       bot.motorRight.SetPosition(0)
@@ -149,9 +149,11 @@ func SaveCan() string {
   }
 
   if STATE(":escape:exit") {
+    BehaviourTrace("exiting chemical spill")
     left := bot.colorSensorLeft.RgbIntensity()
     right := bot.colorSensorRight.RgbIntensity()
     if left > 30 && right > 30 {
+      BehaviourDebug("hit silver, going to " + log.state(":escape:align"))
       go bot.motorRight.RunForever(150)
       go bot.motorLeft.RunForever(-150)
       return "chemical_spill:escape:align"
@@ -159,8 +161,10 @@ func SaveCan() string {
   }
 
   if STATE(":escape:align") {
+    BehaviourTrace("aligning with line")
     _, right := GetColors()
     if right == BLACK {
+      BehaviourDebug("aligned, reverting to " + log.state("follow_line"))
       go bot.motorRight.Stop()
       go bot.motorLeft.Stop()
       return "follow_line"
