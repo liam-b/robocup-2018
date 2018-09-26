@@ -13,6 +13,7 @@ const WATER_TOWER_AVOID_SPEED = 300
 const WATER_TOWER_RECAPTURE_SPEED = 250
 const WATER_TOWER_RECAPTURE_ANGLE = 650
 
+var waterTowersAvoided = 0
 var waterTowerVerifyAttempts = 0
 
 func AvoidWaterTower() string {
@@ -67,6 +68,7 @@ func AvoidWaterTower() string {
     BehaviourTrace("recapturing line")
     if bot.imu.GyroValue() > WATER_TOWER_RECAPTURE_ANGLE {
       BehaviourDebug("finished recapturing line, returning to " + log.state("follow_line"))
+      waterTowersAvoided += 1
       return "follow_line"
     }
   }

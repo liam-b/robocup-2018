@@ -78,7 +78,9 @@ func loop() {
     log.dec()
 
     // FollowLine(true, true)
-    // log.debug(BEHAVIOUR + ", " + strconv.Itoa(bot.ultrasonicSensor.RawDistance()))
+    // log.debug(BEHAVIOUR + ", " + strconv.Itoa(bot.ultrasonicSensor.Distance()))
+    // go bot.motorRight.RunForever(70)
+    // go bot.motorLeft.RunForever(-70)
     // log.debug(BEHAVIOUR + ", " + strconv.Itoa(bot.imu.GyroValue()))
     // log.debug(BEHAVIOUR + ", " + "l: " + strconv.Itoa(bot.colorSensorLeft.RgbIntensity()) + " r: " + strconv.Itoa(bot.colorSensorRight.RgbIntensity()))
     // log.debug(strconv.Itoa(bot.colorSensorLeft.RgbIntensity() - bot.colorSensorRight.RgbIntensity()))

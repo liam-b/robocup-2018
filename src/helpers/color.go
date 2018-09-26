@@ -45,7 +45,8 @@ func DetectedGreen(sensor int) bool {
 }
 
 func LineSensorError() float64 {
-  return float64(bot.colorSensorLeft.RgbIntensity() - bot.colorSensorRight.RgbIntensity())
+  // return float64((bot.colorSensorLeft.RgbIntensity() + 5) - bot.colorSensorRight.RgbIntensity())
+  return float64(min(bot.colorSensorLeft.RgbIntensity() + 2, 30) - min(bot.colorSensorRight.RgbIntensity(), 30))
 }
 
 func BotLifted(count int) bool {

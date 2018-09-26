@@ -6,6 +6,8 @@ var canMatches = 0
 func DetectedWaterTower(distance int, count int) bool {
   value := bot.ultrasonicSensor.Distance()
 
+  if waterTowersAvoided > 3 { return false }
+
   if value > distance {
     waterTowerMatches += 1
   } else {

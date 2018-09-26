@@ -9,7 +9,7 @@ const SAVE_CAN_ENTER_SPEED = 300
 const SAVE_CAN_ENTER_POSITION = 570
 
 const SAVE_CAN_SEARCH_SPEED = 50
-const SAVE_CAN_SEARCH_CAN_DISTANCE = 810
+const SAVE_CAN_SEARCH_CAN_DISTANCE = 830
 const SAVE_CAN_SEARCH_CAN_COUNT = 7
 
 const SAVE_CAN_SAVE_SPEED = 130
@@ -17,13 +17,16 @@ const SAVE_CAN_SAVE_SPEED = 130
 const SAVE_CAN_ESCAPE_TURN_SPEED = 70
 const SAVE_CAN_ESCAPE_TURN_FUDGE_ANGLE = 0.12
 
-const SAVE_CAN_SAVE_POSITION = 170
-const SAVE_CAN_SAVE_REMOVE_POSITION = 540
+const SAVE_CAN_SAVE_POSITION = 230
+
+const SAVE_CAN_ESCAPE_ALIGN_ATTEMPT_COUNT = 150
+const SAVE_CAN_ESCAPE_ALIGN_GYRO_ANGLE = 700
 
 var chemicalSpillVerifyAttempts = 0
 var searchGyroAngle = 0
 var saveCanIter = 0
 var saveCanCount = 80
+var escapeAlignAttempts = 0
 
 func SaveCan() string {
   if STATE(":start") {
@@ -117,7 +120,9 @@ func SaveCan() string {
 
   if STATE(":save:remove") {
     BehaviourTrace("removing can from chemical spill")
-    if bot.motorRight.GetPosition() > SAVE_CAN_SAVE_REMOVE_POSITION && bot.motorLeft.GetPosition() > SAVE_CAN_SAVE_REMOVE_POSITION {
+    left := bot.colorSensorLeft.RgbIntensity()
+    right := bot.colorSensorRight.RgbIntensity()
+    if left > 17 && right > 17 {
       BehaviourDebug("removed can from chemical spill, moving to " + log.state(":save:return"))
       go bot.motorRight.RunForever(-SAVE_CAN_SAVE_SPEED)
       go bot.motorLeft.RunForever(-SAVE_CAN_SAVE_SPEED)
@@ -152,21 +157,48 @@ func SaveCan() string {
     BehaviourTrace("exiting chemical spill")
     left := bot.colorSensorLeft.RgbIntensity()
     right := bot.colorSensorRight.RgbIntensity()
-    if left > 30 && right > 30 {
-      BehaviourDebug("hit silver, going to " + log.state(":escape:align"))
+    if left > 17 && right > 17 {
+      BehaviourDebug("hit silver, going to " + log.state(":escape:align:turn"))
       go bot.motorRight.RunForever(150)
       go bot.motorLeft.RunForever(-150)
-      return "chemical_spill:escape:align"
+      escapeAlignAttempts = 0
+      return "chemical_spill:escape:align:turn"
     }
   }
 
-  if STATE(":escape:align") {
-    BehaviourTrace("aligning with line")
+  if STATE(":escape:align:turn") {
+    BehaviourTrace("aligning with line via tank turn")
     _, right := GetColors()
     if right == BLACK {
       BehaviourDebug("aligned, reverting to " + log.state("follow_line"))
-      go bot.motorRight.Stop()
-      go bot.motorLeft.Stop()
+      return "follow_line"
+    }
+
+    escapeAlignAttempts += 1
+    if escapeAlignAttempts >= SAVE_CAN_ESCAPE_ALIGN_ATTEMPT_COUNT {
+      BehaviourDebug("failed to align with tank turn, moving to " + log.state(":escape:align:circle"))
+      go bot.motorRight.RunForever(200)
+      go bot.motorLeft.RunForever(50)
+      return "chemical_spill:escape:align:circle"
+    }
+  }
+
+  if STATE(":escape:align:circle") {
+    BehaviourTrace("aligning with line via wide circle")
+    _, right := GetColors()
+    if right == BLACK {
+      BehaviourDebug("aligned, reverting to " + log.state("follow_line"))
+      go bot.motorRight.RunForever(-int(WATER_TOWER_RECAPTURE_SPEED / 2))
+      go bot.motorLeft.RunForever(WATER_TOWER_RECAPTURE_SPEED)
+      bot.imu.ResetGyro()
+      return "chemical_spill:escape:align:recapture"
+    }
+  }
+
+  if STATE(":escape:align:recapture") {
+    BehaviourTrace("recapturing line")
+    if bot.imu.GyroValue() < -SAVE_CAN_ESCAPE_ALIGN_GYRO_ANGLE {
+      BehaviourDebug("finished recapturing line, returning to " + log.state("follow_line"))
       return "follow_line"
     }
   }

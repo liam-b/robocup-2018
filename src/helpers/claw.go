@@ -1,7 +1,7 @@
 package main
 
 const CLAW_TOTAL_DISTANCE = 90
-const CLAW_SPEED = 200
+const CLAW_SPEED = 80
 
 const CLAW_OPEN = 2
 const CLAW_HALF = 1
