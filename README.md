@@ -4,3 +4,4 @@ A robot for [RCJA](http://www.robocupjunior.org.au/) [rescue](http://www.robocup
 ### ip addresses
 - home: robot@192.168.1.162
 - hotspot: robot@192.168.43.35
+- parsa's wackness: robot@172.20.10.2
