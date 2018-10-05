@@ -7,15 +7,15 @@ import "strconv"
 const MOTOR_RATE = 2.8
 const MOTOR_CURVE = 0.6
 
-const PROPORTIONAL = 9 // 9
-const INTEGRAL = 0.40 // 0.40
+const PROPORTIONAL = 9
+const INTEGRAL = 0.40
 const DOUBLE_INTEGRAL = 0.0
-const DERIVATIVE = 12.0 // 12.0
-const DOUBLE_DERIVATIVE = 15.0 // 15.0
+const DERIVATIVE = 12.0
+const DOUBLE_DERIVATIVE = 15.0
 
-const BASE_SPEED = 370 // 400
-const INTEGRAL_SLOW = 190.0 // 200.0
-const DERIVATIVE_SLOW = 150.0 // 200.0
+const BASE_SPEED = 370
+const INTEGRAL_SLOW = 190.0
+const DERIVATIVE_SLOW = 150.0
 
 var lastError = 0.0
 var lastDerivative = 0.0
@@ -48,8 +48,8 @@ func PID() string {
   }
 
   if STATE(":follow") {
-    // BehaviourTrace("using pid to follow line")
-    BehaviourTrace("r:" + strconv.Itoa(bot.colorSensorRight.RgbIntensity()) + ", l: " + strconv.Itoa(bot.colorSensorLeft.RgbIntensity()))
+    BehaviourTrace("using pid to follow line")
+    // BehaviourTrace("r: " + strconv.Itoa(bot.colorSensorRight.RgbIntensity()) + ", l: " + strconv.Itoa(bot.colorSensorLeft.RgbIntensity()))
     // BehaviourTrace("p: " + strconv.Itoa(int(currentError)) + ", i: " + strconv.Itoa(int(integral)) + ", 2i: " + strconv.Itoa(int(doubleIntegral)) + ", d: " + strconv.Itoa(int(derivative)) + ", 2d: " + strconv.Itoa(int(doubleDerivative)))
   }
   return BEHAVIOUR
